@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: true
-      - name: Replace destination tree with unchanged source tree
+      - name: Import original Git blobs without modifying workflows yet
         shell: bash
         run: |
           set -euo pipefail
@@ -25,6 +25,10 @@ jobs:
           SOURCE_TREE="$(git rev-parse "$SOURCE_COMMIT^{tree}")"
           test "$SOURCE_TREE" = "7ae91170b01fade767bd45790182efcd3d581551"
           TARGET_HEAD="$(git rev-parse HEAD)"
-          NEW_COMMIT="$(printf 'Copy original site into stomatology unchanged\n' | git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit-tree "$SOURCE_TREE" -p "$TARGET_HEAD")"
+          git read-tree "$SOURCE_TREE"
+          git restore --source=HEAD --staged -- .github/workflows
+          STAGED_TREE="$(git write-tree)"
+          test -z "$(git diff-tree -r --name-only "$TARGET_HEAD" "$STAGED_TREE" -- .github/workflows)"
+          NEW_COMMIT="$(printf 'Import original site files without workflow edits\n' | git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit-tree "$STAGED_TREE" -p "$TARGET_HEAD")"
           git push origin "$NEW_COMMIT:refs/heads/main"
-          echo "Exact source tree: $SOURCE_TREE"
+          echo "Imported source Git objects; workflows still untouched."
