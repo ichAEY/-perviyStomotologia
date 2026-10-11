@@ -1,0 +1,174 @@
+@media (max-width:767px){
+  /* Final pass: preserve the previous visual language and only adjust requested details. */
+  .m2-location{display:none!important}
+
+  .m2-hero-body{padding-top:3px}
+  .m2-proof{margin-top:4px}
+  .m2-name-block{margin-top:18px}
+
+  /* Restore the quieter typography from the earlier successful version. */
+  .m2-button{font-size:11px;font-weight:650;letter-spacing:-.01em;line-height:1}
+  .m2-sticky-book{font-size:8.7px;font-weight:680;letter-spacing:0;line-height:1}
+
+  /* Equalize the typography of the two summary cards. */
+  .m2-info-grid article:first-child strong{font-size:18px}
+
+  /* Blend portrait image into the neighbouring sections at both edges. */
+  .m2-photo-blend{background:#edf3f7}
+  .m2-photo-blend img{
+    -webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 8%,#000 91%,transparent 100%);
+    mask-image:linear-gradient(to bottom,transparent 0%,#000 8%,#000 91%,transparent 100%);
+  }
+  .m2-photo-blend:before,
+  .m2-photo-blend:after{
+    position:absolute;z-index:2;right:-8%;left:-8%;height:13%;content:"";pointer-events:none;
+  }
+  .m2-photo-blend:before{top:0;background:linear-gradient(to bottom,#edf3f7,rgba(237,243,247,0))}
+  .m2-photo-blend:after{bottom:0;background:linear-gradient(to top,#edf3f7,rgba(237,243,247,0))}
+
+  /* Services heading: keep the word centered and move the illustration a few pixels away. */
+  .m2-services{padding-top:46px}
+  .m2-services-head{position:relative;text-align:center}
+  .m2-services-title{position:relative;display:grid;min-height:43px;place-items:center}
+  .m2-services-title h2{width:100%;font-size:34px;text-align:center}
+  .m2-services-mark{position:absolute;left:calc(50% - 98px);top:50%;transform:translateY(-50%)}
+  .m2-services-head p{margin-top:10px}
+  .m2-service-tabs{margin-top:18px}
+
+  /* Choice cards keep their structure; only preserve the comfortable rhythm. */
+  .m2-service-tab{min-height:158px;padding:15px 14px 16px}
+  .m2-service-tab small{margin-top:18px}
+  .m2-service-tab strong{margin-top:9px;line-height:1.2}
+
+  /* In the expanded service card, add only a tiny gap between location and service title. */
+  .m2-service-detail h3{margin-top:8px}
+
+  /* Service body rhythm and smoother switch animation. */
+  .m2-service-detail{animation:m2FinalDetail .48s cubic-bezier(.2,.76,.2,1) both;will-change:opacity,transform}
+  @keyframes m2FinalDetail{
+    0%{opacity:0;transform:translateY(10px) scale(.996);filter:blur(1.5px)}
+    100%{opacity:1;transform:none;filter:blur(0)}
+  }
+  .m2-service-detail>.m2-detail-kicker,
+  .m2-service-detail>h3,
+  .m2-service-detail>.m2-detail-summary,
+  .m2-service-detail>.m2-detail-content,
+  .m2-service-detail>.m2-service-meta,
+  .m2-service-detail>.m2-button,
+  .m2-service-detail>.m2-service-photo{animation:m2DetailPart .44s cubic-bezier(.2,.76,.2,1) both}
+  .m2-service-detail>h3{animation-delay:.025s}
+  .m2-service-detail>.m2-detail-summary{animation-delay:.055s}
+  .m2-service-detail>.m2-detail-content{animation-delay:.085s}
+  .m2-service-detail>.m2-service-meta{animation-delay:.115s}
+  .m2-service-detail>.m2-button{animation-delay:.14s}
+  .m2-service-detail>.m2-service-photo{animation-delay:.16s}
+  @keyframes m2DetailPart{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+  .m2-detail-summary{margin-top:12px}
+  .m2-detail-content{margin-top:19px}
+  .m2-detail-content section+section{padding-top:16px}
+
+  /* Center About in the same visual manner as Services and give the illustration proper air. */
+  .m2-about{padding-top:52px}
+  .m2-about-head{position:relative;display:grid;min-height:45px;place-items:center}
+  .m2-about-head h2{width:100%;text-align:center}
+  .m2-about-mark{position:absolute;left:calc(50% - 103px);top:50%;transform:translateY(-50%)}
+  .m2-about-lead{margin-top:16px}
+
+  /* Request title and continuous marquee. */
+  .m2-request>span{font-size:13.5px;font-weight:650}
+  .m2-request>span:after{content:"?"}
+  .m2-request-scroll{display:block;margin:17px -15px 0;padding:0;overflow:hidden;white-space:nowrap}
+  .m2-request-scroll.m2-marquee-ready{overflow:hidden}
+  .m2-request-track{display:flex;width:max-content;will-change:transform;animation:m2RequestMarquee 22s linear infinite}
+  .m2-request-group{display:flex;gap:7px;padding:0 7px 4px 15px}
+  .m2-request-group+.m2-request-group{padding-left:0;padding-right:15px}
+  .m2-request-group b{flex:0 0 auto;padding:10px 11px;border:1px solid rgba(21,89,183,.12);border-radius:999px;background:#f3f7fc;color:#426484;font-size:8.3px;font-weight:560;white-space:nowrap}
+  @keyframes m2RequestMarquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+  /* More deliberate scroll reveals without changing layout. */
+  .js .mobile-v2 .m2-info-wide[data-m2-reveal]{transform:translateY(24px) scale(.99);transition-duration:.78s}
+  .js .mobile-v2 .m2-info-wide[data-m2-reveal].m2-visible{transform:none}
+  .js .mobile-v2 .m2-info-grid article:first-child[data-m2-reveal]{transform:translateX(-22px);transition-duration:.74s}
+  .js .mobile-v2 .m2-info-grid article:last-child[data-m2-reveal]{transform:translateX(22px);transition-duration:.74s;transition-delay:.07s}
+  .js .mobile-v2 .m2-info-grid article[data-m2-reveal].m2-visible{transform:none}
+
+  .js .mobile-v2 .m2-services-head[data-m2-reveal]{transform:translateY(20px);transition-duration:.72s}
+  .js .mobile-v2 .m2-services-head[data-m2-reveal].m2-visible{transform:none}
+  .js .mobile-v2 .m2-service-tabs[data-m2-reveal] .m2-service-tab{opacity:0;transform:translateY(14px) scale(.988);transition:opacity .58s ease,transform .66s cubic-bezier(.2,.76,.2,1),border-color .25s ease,background .25s ease,box-shadow .25s ease}
+  .js .mobile-v2 .m2-service-tabs[data-m2-reveal] .m2-service-tab:last-child{transition-delay:.07s}
+  .js .mobile-v2 .m2-service-tabs[data-m2-reveal].m2-visible .m2-service-tab{opacity:1;transform:none}
+  .js .mobile-v2 .m2-service-tabs[data-m2-reveal].m2-visible .m2-service-tab.is-active{transform:translateY(-2px)}
+
+  .js .mobile-v2 .m2-about-head[data-m2-reveal]{transform:translateY(18px);transition-duration:.72s}
+  .js .mobile-v2 .m2-about-head[data-m2-reveal].m2-visible{transform:none}
+  .js .mobile-v2 .m2-about-lead[data-m2-reveal]{transform:translateY(18px);transition-duration:.74s;transition-delay:.03s}
+  .js .mobile-v2 .m2-about-lead[data-m2-reveal].m2-visible{transform:none}
+  .js .mobile-v2 .m2-achievements[data-m2-reveal]>div{opacity:0;transform:translateY(13px);transition:opacity .52s ease,transform .62s cubic-bezier(.2,.76,.2,1)}
+  .js .mobile-v2 .m2-achievements[data-m2-reveal]>div:nth-child(2){transition-delay:.06s}
+  .js .mobile-v2 .m2-achievements[data-m2-reveal]>div:nth-child(3){transition-delay:.12s}
+  .js .mobile-v2 .m2-achievements[data-m2-reveal].m2-visible>div{opacity:1;transform:none}
+  .js .mobile-v2 .m2-about-photo[data-m2-reveal]{transform:translateY(18px) scale(.992);transition-duration:.82s}
+  .js .mobile-v2 .m2-about-photo[data-m2-reveal].m2-visible{transform:none}
+  .js .mobile-v2 .m2-contact-card[data-m2-reveal]{transform:translateY(20px);transition-duration:.76s}
+  .js .mobile-v2 .m2-contact-card[data-m2-reveal].m2-visible{transform:none}
+  .js .mobile-v2 .m2-form-head[data-m2-reveal],
+  .js .mobile-v2 .m2-form[data-m2-reveal]{transform:translateY(18px);transition-duration:.74s}
+  .js .mobile-v2 .m2-form[data-m2-reveal]{transition-delay:.05s}
+  .js .mobile-v2 .m2-form-head[data-m2-reveal].m2-visible,
+  .js .mobile-v2 .m2-form[data-m2-reveal].m2-visible{transform:none}
+
+  /* Dark form card, still distinct from the surrounding dark section. */
+  .m2-form-section{padding-bottom:max(40px,calc(env(safe-area-inset-bottom) + 30px));background:linear-gradient(150deg,#252a30,#15181c)}
+  .m2-form{
+    border:1px solid rgba(255,255,255,.11);
+    background:#232930;
+    box-shadow:0 18px 44px rgba(0,0,0,.22);
+  }
+  .m2-form label>span{color:rgba(255,255,255,.72)}
+  .m2-form label>span small{color:rgba(255,255,255,.43)}
+  .m2-form input,.m2-form textarea{
+    border-color:rgba(255,255,255,.08);
+    background:#2c333b;
+    color:#fff;
+  }
+  .m2-form input::placeholder,.m2-form textarea::placeholder{color:rgba(255,255,255,.36)}
+  .m2-form input:focus,.m2-form textarea:focus{
+    border-color:rgba(255,255,255,.2);
+    background:#303842;
+    box-shadow:0 0 0 3px rgba(255,255,255,.035);
+  }
+  .m2-form button{background:#fff;color:#15181c}
+  body.m2-dark-browser-chrome{background:#15181c!important}
+
+  /* Keep sticky mounted so both entrance and exit can animate reliably on iOS. */
+  .m2-sticky.m2-final-managed{
+    display:grid!important;
+    opacity:0!important;
+    transform:translate3d(0,-18px,0) scale(.992)!important;
+    pointer-events:none!important;
+    will-change:opacity,transform;
+    backface-visibility:hidden;
+    -webkit-backface-visibility:hidden;
+    transition:
+      opacity .58s cubic-bezier(.22,.61,.36,1),
+      transform .62s cubic-bezier(.22,.61,.36,1)!important;
+  }
+  .m2-sticky.m2-final-managed.m2-final-show{
+    opacity:1!important;
+    transform:translate3d(0,0,0) scale(1)!important;
+    pointer-events:auto!important;
+    transition:
+      opacity .48s cubic-bezier(.22,.61,.36,1),
+      transform .56s cubic-bezier(.16,.84,.24,1)!important;
+  }
+}
+
+@media (max-width:365px){
+  .m2-services-mark{left:calc(50% - 91px)}
+  .m2-about-mark{left:calc(50% - 96px)}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .m2-request-track{animation:none!important}
+  .m2-service-detail>*{animation:none!important}
+}

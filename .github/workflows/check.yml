@@ -1,4 +1,4 @@
-name: Check dentistry office
+name: Check dentistry template
 on:
   push:
     branches: [main]
@@ -13,10 +13,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache: npm
+      - run: npm ci
       - run: npm run check
       - run: npm test
       - run: npm run build
       - uses: actions/upload-artifact@v4
         with:
-          name: dentistry-website
-          path: dist/
+          name: dentistry-template
+          path: out/

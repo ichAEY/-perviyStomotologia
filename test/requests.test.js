@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
-import { mkdtemp, rm } from 'node:fs/promises';
+import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import demo from '../public/site-data.js';
@@ -30,10 +30,10 @@ function liveData() {
   return data;
 }
 const payload = () => ({ requestId: randomUUID(), phone: '+7 (999) 000-00-00', name: '', consent: true, consentVersion: 'test-v1', website: '' });
-async function fixture(t, { mode = 'live', rateLimit = 10, store: providedStore } = {}) {
+async function fixture(t, { mode = 'live', rateLimit = 10, store: providedStore, publicDir = resolve('public') } = {}) {
   const store = providedStore || createStore(':memory:');
   const data = mode === 'live' ? liveData() : demo;
-  const server = createOfficeServer({ data, store, publicDir: resolve('public'), publicOrigin: 'https://clinic.example', rateLimit });
+  const server = createOfficeServer({ data, store, publicDir, publicOrigin: 'https://clinic.example', rateLimit });
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   const base = `http://127.0.0.1:${server.address().port}`;
   t.after(async () => { await new Promise(resolve => server.close(resolve)); if (!providedStore) store.close(); });
@@ -144,10 +144,15 @@ test('SQLite survives process reopen; retention removes expired records', async 
   store.close();
 });
 test('static server protects private files and returns security headers', async t => {
-  const { base } = await fixture(t);
+  const publicDir = await mkdtemp(join(tmpdir(), 'dentistry-static-'));
+  t.after(() => rm(publicDir, { recursive: true, force: true }));
+  await writeFile(join(publicDir, 'index.html'), '<main id="main">Template</main><script>document.documentElement.classList.add("js")</script>');
+  const { base } = await fixture(t, { publicDir });
   const page = await fetch(base);
   assert.equal(page.status, 200);
   assert.match(page.headers.get('content-security-policy'), /frame-ancestors 'none'/);
+  assert.match(page.headers.get('content-security-policy'), /sha256-/);
+  assert.doesNotMatch(page.headers.get('content-security-policy'), /unsafe-inline/);
   assert.match(await page.text(), /<main id="main">/);
   assert.equal((await fetch(`${base}/.env`)).status, 404);
   assert.equal((await fetch(`${base}/server/store.js`)).status, 404);

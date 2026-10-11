@@ -1,0 +1,28 @@
+@media (max-width:767px){
+  .m2-about-mark{left:calc(50% - 112px)!important}
+
+  .m2-sticky.m2-final-managed{
+    opacity:0!important;
+    transform:translate3d(0,-14px,0) scale(.985)!important;
+    filter:blur(2px);
+    transition:opacity .42s cubic-bezier(.22,.72,.22,1),transform .5s cubic-bezier(.2,.8,.2,1),filter .34s ease,box-shadow .42s ease!important;
+    will-change:opacity,transform,filter;
+  }
+
+  .m2-sticky.m2-final-managed.m2-final-show{
+    opacity:1!important;
+    transform:translate3d(0,0,0) scale(1)!important;
+    filter:blur(0);
+  }
+}
+
+@media (max-width:365px){
+  .m2-about-mark{left:calc(50% - 105px)!important}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .m2-sticky.m2-final-managed{
+    filter:none!important;
+    transition:opacity .2s ease!important;
+  }
+}

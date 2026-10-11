@@ -1,13 +1,28 @@
 {
-  "name": "tanem-dentistry-office",
-  "version": "1.1.0",
+  "name": "tanem-dentistry-template",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=22.16" },
+  "engines": {
+    "node": ">=22.16"
+  },
   "scripts": {
+    "dev": "next dev",
     "start": "node server/index.js",
-    "build": "node scripts/build.js",
-    "check": "node scripts/check.js",
-    "test": "node --test test/*.test.js"
+    "check": "tsc --noEmit && node scripts/check.js",
+    "test": "node --test test/*.test.js",
+    "build": "next build --webpack",
+    "build:pages": "GITHUB_PAGES=true NEXT_PUBLIC_BASE_PATH=/-perviyStomotologia next build --webpack"
+  },
+  "dependencies": {
+    "next": "16.2.6",
+    "react": "19.2.6",
+    "react-dom": "19.2.6"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "@types/node": "22.19.19",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3"
   }
 }

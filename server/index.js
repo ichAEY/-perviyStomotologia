@@ -13,7 +13,7 @@ if (!Number.isInteger(retention) || retention < 1 || retention > 3650) throw new
 const store = createStore(resolve(process.env.DATA_DIR || 'var', 'requests.sqlite'));
 const server = createOfficeServer({
   data, store,
-  publicDir: fileURLToPath(new URL('../public', import.meta.url)),
+  publicDir: fileURLToPath(new URL('../out', import.meta.url)),
   publicOrigin: process.env.PUBLIC_ORIGIN
 });
 let delivering = false;

@@ -69,6 +69,8 @@ export function createOfficeServer({ data, store, publicDir, publicOrigin, rateL
     try {
       const body = await readFile(file);
       res.writeHead(200, {
+        // Authorize only the inline scripts actually present in the static HTML.
+        'Content-Security-Policy': "default-src 'self'; script-src 'self' " + (extname(file) === '.html' ? [...body.toString().matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].map(match => "'sha256-" + createHash('sha256').update(match[1]).digest('base64') + "'").join(' ') : '') + "; style-src 'self'; img-src 'self' https: data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
         'Content-Type': mime[extname(file)] || 'application/octet-stream',
         'Cache-Control': extname(file) === '.html' || extname(file) === '.js' ? 'no-cache' : 'public, max-age=3600'
       });

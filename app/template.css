@@ -1,0 +1,21 @@
+/* Only content/form adaptations; the transferred layout keeps its original CSS. */
+.template-form-note,.template-status{font-size:12px;line-height:1.5}
+.template-form-note{opacity:.7}
+.template-error{font-size:12px;line-height:1.4;color:#ba3939}
+.m2-form .template-error{color:#ffb9b9}
+.dp-form .template-consent,.m2-form .template-consent{display:flex;align-items:flex-start;gap:10px;font-size:12px;line-height:1.5}
+.dp-form .template-consent input,.m2-form .template-consent input{flex:0 0 18px;width:18px;height:18px;margin:2px 0 0;padding:0;accent-color:#145da7}
+.dp-form .template-consent span,.m2-form .template-consent span{font-size:12px;line-height:1.5}
+.dp-form>button.template-document-button,.m2-form>button.template-document-button{min-height:30px;padding:0;background:none;box-shadow:none;color:inherit;font-size:12px;text-decoration:underline}
+.template-dialog-backdrop{position:fixed;inset:0;z-index:200;display:grid;place-items:center;padding:20px;background:rgba(0,0,0,.5)}
+.template-dialog{width:min(100%,580px);max-height:80vh;overflow:auto;padding:24px;border-radius:20px;background:#fff;color:#17202a}
+.template-dialog h2{font-size:24px}.template-dialog p{margin:16px 0;white-space:pre-wrap}
+.template-dialog button{margin-top:20px;padding:12px 18px;border:0;border-radius:10px;background:#145da7;color:#fff}
+.template-status:empty{display:none}
+.dp-form button:disabled,.m2-form button:disabled{cursor:wait;opacity:.65}
+.dp-service-meta strong{overflow-wrap:anywhere}
+.m2-contact-link b{overflow-wrap:anywhere}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}}
+
+.dp-about-photo,.dp-service-photo,.m2-about-photo,.m2-service-photo,.m2-photo-blend{position:relative}
+.template-media-caption{position:absolute;z-index:5;left:12px;right:12px;bottom:12px;width:fit-content;padding:5px 8px;border-radius:6px;background:rgba(255,255,255,.9);color:#405568;font-size:10px;line-height:1.3}
