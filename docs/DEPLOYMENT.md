@@ -4,7 +4,7 @@
 
 `npm run build` создаёт `out/` для корня домена. Для GitHub Pages используйте `npm run build:pages`: сборка учитывает подпапку репозитория. Его можно раздать статически на GitHub Pages, Selectel или другом хостинге. Форма в `demo` работает как проверка интерфейса и ничего не отправляет.
 
-Для GitHub Pages включите в Settings → Pages источник GitHub Actions, затем запустите workflow «Publish template preview to GitHub Pages». Workflow публикует демонстрационный шаблон при обновлении main; форма остаётся в demo.
+Для GitHub Pages включите в Settings → Pages источник GitHub Actions, затем запустите workflow «Publish template preview to GitHub Pages». Workflow запускается вручную после включения GitHub Pages. Он публикует демонстрационный шаблон; форма остаётся в demo.
 
 ## Сайт клиники с реальными заявками
 
