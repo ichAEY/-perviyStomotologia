@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1256a5">
+  <meta name="description" content="Стоматологический цифровой офис TANEM: услуги, врачи, информация для пациентов и простая заявка на приём. Демонстрационный шаблон.">
+  <title>Стоматология — цифровой офис TANEM</title>
+  <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="./assets/manrope.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Перейти к содержимому</a>
+  <div class="demo-ribbon" id="demo-ribbon"><span>Образец цифрового офиса</span><span>Данные клиники появятся после заполнения шаблона</span></div>
+  <main id="main">
+  <div class="hero-frame" id="top">
+    <header class="topbar">
+      <a class="identity" href="#top" aria-label="На главную">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M12 7c-6 0-8 5-6 11l4 14c1 4 4 4 5 0l2-7c1-3 5-3 6 0l2 7c1 4 4 4 5 0l4-14c2-6 0-11-6-11-4 0-5 2-8 2s-4-2-8-2Z"/></svg></span>
+        <span class="identity-text"><strong data-clinic-name>Стоматология</strong><small>Цифровой офис · TANEM</small></span>
+      </a>
+      <nav class="desktop-nav" aria-label="Основная навигация"><a href="#services">Услуги</a><a href="#doctors">Врачи</a><a href="#clinic">Клиника</a><a href="#contacts">Контакты</a></nav>
+      <div class="top-actions"><a class="button button-primary top-request" href="#request">Записаться <span aria-hidden="true">↗</span></a><button class="menu-button" id="menu-toggle" aria-expanded="false" aria-controls="mobile-nav" aria-label="Открыть меню"><span></span><span></span></button></div>
+    </header>
+    <nav class="mobile-nav" id="mobile-nav" aria-label="Меню сайта" hidden><a href="#services">Услуги и цены</a><a href="#doctors">Врачи</a><a href="#clinic">О клинике</a><a href="#visit">Первый приём</a><a href="#contacts">Контакты</a><a href="#patient-info">Информация для пациентов</a></nav>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="small-dot" aria-hidden="true"></span> Стоматологическая клиника</p>
+          <h1 id="hero-title">Здоровье зубов.<br><span>Понятный путь<br class="hero-break"> к лечению.</span></h1>
+          <p class="hero-lead" id="hero-lead">Узнайте об услугах и врачах, познакомьтесь с клиникой и оставьте заявку на приём. Администратор поможет согласовать время визита.</p>
+          <div class="hero-actions"><a class="button button-primary" href="#request">Записаться на приём <span aria-hidden="true">↗</span></a><a class="button button-secondary" href="#services">Услуги и цены <span aria-hidden="true">↓</span></a></div>
+          <div class="hero-bottom"><span>Врачи и квалификация</span><i aria-hidden="true"></i><span>Услуги и стоимость</span><i aria-hidden="true"></i><span>Связь с клиникой</span></div>
+        </div>
+        <figure class="hero-visual"><img id="hero-image" src="./assets/clinic-hero.webp" alt="Иллюстрация светлого стоматологического кабинета с голубым креслом" width="1536" height="1024" fetchpriority="high"><figcaption id="hero-caption">Иллюстрация кабинета · образец</figcaption><div class="hero-note"><span class="note-icon" aria-hidden="true">↗</span><span><strong>Первый шаг — просто связаться</strong><small>Не обязательно заранее выбирать процедуру</small></span></div></figure>
+      </section>
+  </div>
+  <div class="page-content">
+    <section class="section shell" id="services" aria-labelledby="services-title">
+      <header class="section-heading"><div><span class="section-label">01 / Услуги</span><h2 id="services-title">С чего начать?</h2></div><p>Выберите направление, чтобы посмотреть услуги. Если пока не знаете, какой приём нужен, оставьте заявку — администратор поможет с записью.</p></header>
+      <p class="sample-note" id="service-demo-note">Направления приведены для образца. Перечень и цены заполняются по данным клиники.</p>
+      <div class="services-grid" id="services-grid"></div>
+      <div class="service-footer"><span>Все услуги и стоимость — в одном месте</span><button class="text-link" id="price-open">Полный прайс-лист <span aria-hidden="true">↗</span></button></div>
+    </section>
+    <section class="section shell" id="doctors" aria-labelledby="doctors-title">
+      <header class="section-heading"><div><span class="section-label">02 / Врачи</span><h2 id="doctors-title">Знакомство<br>до первого приёма</h2></div><p>Специализация, образование и квалификация помогают понять, к кому обратиться. В цифровом офисе есть место для каждого врача клиники.</p></header>
+      <div class="doctors-grid" id="doctors-grid"></div>
+    </section>
+    <section class="section shell" id="clinic" aria-labelledby="clinic-title">
+      <div class="clinic-panel"><figure class="clinic-image"><img src="./assets/clinic-hero.webp" id="clinic-image" alt="Иллюстрация стоматологического кабинета" width="1536" height="1024" loading="lazy"><figcaption id="clinic-caption">Иллюстрация · заменяется фотографией клиники</figcaption></figure><div class="clinic-copy"><span class="section-label">03 / Клиника</span><h2 id="clinic-title">Важные детали —<br>перед визитом</h2><p id="clinic-description">Посмотрите, где проходит приём, как устроена клиника и какая информация доступна пациентам. Здесь собраны сведения, которые помогают подготовиться к посещению.</p><div class="clinic-facts" id="clinic-facts"></div><a class="text-link" href="#patient-info">Информация для пациентов <span aria-hidden="true">↗</span></a></div></div>
+    </section>
+    <section class="section shell" id="visit" aria-labelledby="visit-title">
+      <header class="section-heading"><div><span class="section-label">04 / Первый приём</span><h2 id="visit-title">Всё начинается<br>с разговора</h2></div><p>Заявка помогает связаться с клиникой. Дату, время и нужного специалиста администратор согласует с вами отдельно.</p></header>
+      <ol class="visit-steps"><li><span>01</span><h3>Оставьте номер</h3><p>Для заявки достаточно телефона. Имя можно указать по желанию.</p></li><li><span>02</span><h3>Согласуйте визит</h3><p>Администратор свяжется с вами в рабочее время и уточнит детали записи.</p></li><li><span>03</span><h3>Познакомьтесь с врачом</h3><p>На приёме врач обсудит ваш запрос и объяснит, какие следующие шаги возможны.</p></li></ol>
+    </section>
+    <section class="section shell faq-section" id="faq" aria-labelledby="faq-title"><div><span class="section-label">05 / Вопросы</span><h2 id="faq-title">Перед приёмом</h2><p class="muted">Короткие ответы на организационные вопросы.</p></div><div class="faq-list" id="faq-list"></div></section>
+    <section class="section shell" id="reviews" aria-labelledby="reviews-title"><header class="section-heading"><div><span class="section-label">06 / Отзывы</span><h2 id="reviews-title">Опыт пациентов</h2></div><p>Отзывы публикуются со ссылкой на источник. Так можно познакомиться с впечатлениями пациентов и посмотреть полную историю.</p></header><div id="reviews-content"></div></section>
+    <section class="section shell request-section" id="request" aria-labelledby="request-title">
+      <div class="request-copy"><span class="section-label">07 / Запись на приём</span><h2 id="request-title">Оставьте номер.<br><span>Мы свяжемся с вами.</span></h2><p>Администратор поможет выбрать специалиста и согласовать время. Для заявки не нужно описывать симптомы или выбирать лечение.</p><a class="phone-link" id="request-phone" hidden></a><p class="form-note">Заявка не подтверждает запись автоматически. Приём считается согласованным после разговора с администратором.</p></div>
+      <form id="request-form" class="request-form" novalidate>
+        <p class="form-title">Заявка на обратный звонок</p>
+        <p class="sample-note" id="form-demo-note">Это образец. Проверка формы не отправляет заявку в клинику.</p>
+        <div class="field"><label for="phone">Телефон <span aria-hidden="true">*</span></label><input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+7 999 123-45-67" maxlength="32" required aria-describedby="phone-hint phone-error"><small class="field-hint" id="phone-hint">Номер, по которому с вами удобно связаться</small><small class="field-error" id="phone-error" hidden></small></div>
+        <div class="field"><label for="name">Имя <span class="optional">необязательно</span></label><input id="name" name="name" type="text" autocomplete="given-name" placeholder="Как к вам обращаться" maxlength="80" aria-describedby="name-error"><small class="field-error" id="name-error" hidden></small></div>
+        <div class="honeypot" aria-hidden="true"><label for="website">Сайт</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
+        <div class="consent-wrap"><label class="consent-label" for="consent"><input id="consent" name="consent" type="checkbox" required aria-describedby="consent-error"><span>Я даю <button type="button" class="inline-link" data-document="consent">согласие на обработку персональных данных</button> для ответа на мою заявку.</span></label><small class="field-error" id="consent-error" hidden></small></div>
+        <p class="privacy-note">Сведения об обработке данных — в <button type="button" class="inline-link" data-document="privacy">политике конфиденциальности</button>.</p>
+        <button class="button button-primary submit-button" type="submit"><span id="submit-label">Перезвоните мне</span><span aria-hidden="true">↗</span></button>
+        <div class="form-status" id="form-status" role="status" aria-live="polite" tabindex="-1" hidden></div>
+      </form>
+    </section>
+    <section class="section shell" id="contacts" aria-labelledby="contacts-title"><header class="section-heading"><div><span class="section-label">08 / Контакты</span><h2 id="contacts-title">До встречи<br>в клинике</h2></div><p>Адрес, часы работы и ориентиры для входа помогут спланировать визит.</p></header><div class="contacts-panel"><div class="contact-details" id="contact-details"></div><div class="map-panel" id="map-panel"><svg viewBox="0 0 600 340" fill="none" aria-hidden="true"><path d="m-20 70 640 110M100-20 80 380M310-20 70 380M540-20-90 380M-20 280 640-60" stroke="#c4daef" stroke-width="36"/><path d="m-20 70 640 110M100-20 80 380M310-20 70 380M540-20-90 380M-20 280 640-60" stroke="#fff" stroke-width="23"/><circle cx="330" cy="160" r="36" fill="#1256a5"/><path d="M330 143c-9 0-15 6-15 14 0 11 15 22 15 22s15-11 15-22c0-8-6-14-15-14Z" stroke="white" stroke-width="2"/><circle cx="330" cy="156" r="5" stroke="white" stroke-width="2"/></svg><p>Маршрут появится после добавления адреса клиники</p></div></div></section>
+    <section class="section shell patient-section" id="patient-info" aria-labelledby="patient-title"><div><span class="section-label">09 / Пациентам</span><h2 id="patient-title">Открытая информация</h2><p class="muted">Сведения о клинике и документы для пациентов.</p></div><div class="patient-content"><label class="search-label" for="document-search">Поиск по документам</label><input type="search" id="document-search" placeholder="Например, лицензия или прайс-лист" autocomplete="off" aria-controls="document-list"><div id="document-list"></div><p id="document-empty" class="muted" role="status" hidden>По этому запросу документов нет.</p></div></section>
+    <footer class="footer shell"><div class="footer-top"><a href="#top" class="footer-name" data-clinic-name>Стоматология</a><button class="text-link" id="accessibility-toggle" aria-pressed="false">Версия для слабовидящих</button><a class="text-link" href="#top">Наверх ↑</a></div><p class="medical-note">Имеются противопоказания. Необходима консультация специалиста.</p><div class="footer-bottom"><span id="copyright">Цифровой офис стоматологии</span><a href="https://tanem.ru/" target="_blank" rel="noopener noreferrer">Создано TANEM ↗</a></div></footer>
+  </div>
+  </main>
+  <div class="mobile-sticky" id="mobile-sticky" hidden><a href="#request" class="button button-primary">Записаться на приём <span aria-hidden="true">↗</span></a></div>
+  <dialog id="content-dialog" class="content-dialog" aria-labelledby="dialog-title"><div class="dialog-header"><h2 id="dialog-title"></h2><button id="dialog-close" class="close-button" aria-label="Закрыть окно">×</button></div><div id="dialog-body"></div></dialog>
+  <noscript><p class="noscript-note">Для просмотра услуг и работы формы включите JavaScript. Контакты клиники доступны в её официальных источниках.</p></noscript>
+</body>
+</html>
