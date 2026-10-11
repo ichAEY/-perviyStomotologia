@@ -30,7 +30,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Build static site
-        run: npm run build:pages
+        run: |
+          # The imported source remains unchanged in git; rewrite only the CI workspace path.
+          sed -i 's#/-dm_rihalsky#/-perviyStomotologia#g' next.config.ts package.json
+          npm run build:pages
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
