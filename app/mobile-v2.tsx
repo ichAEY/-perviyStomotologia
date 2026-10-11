@@ -9,44 +9,67 @@ type ServiceId = 'offline' | 'online';
 
 const services = {
   offline: {
-    tab: 'Очный приём',
-    eyebrow: 'Севастополь',
-    title: 'Очный приём',
-    summary: 'Очная оценка состояния и движения с разбором ограничений и персональным планом дальнейшей работы.',
+    tab: 'Лечение зубов',
+    eyebrow: 'Здоровье зубов',
+    title: 'Лечение зубов',
+    summary: 'Начинаем с осмотра и диагностики, чтобы разобраться в причине жалоб и обсудить возможные варианты лечения.',
     gives: [
-      'Определить движения и нагрузки, которые сейчас провоцируют дискомфорт.',
-      'Понять, какие ограничения действительно требуют внимания в первую очередь.',
-      'Получить понятный план восстановления и возвращения к привычной активности.',
+      'Осмотр и обсуждение того, что вас беспокоит.',
+      'Объяснение возможных вариантов лечения после диагностики.',
+      'Понятный план следующих шагов и ответы на вопросы.',
     ],
     fits: [
-      'Боль и скованность в спине, суставах или мышцах.',
-      'Восстановление после травм и периода ограниченной активности.',
-      'Возвращение к тренировкам, спорту и повседневной нагрузке.',
+      'Зубная боль или повышенная чувствительность.',
+      'Кариес и другие проблемы, требующие оценки стоматолога.',
+      'Плановый осмотр и необходимость второго мнения.',
     ],
-    price: '5 000 ₽',
-    duration: '60 минут',
+    price: 'Уточняется',
+    duration: 'Индивидуально',
     image: '/dimavhalate.webp',
   },
   online: {
-    tab: 'Онлайн',
-    eyebrow: 'Дистанционно',
-    title: 'Онлайн-консультация',
-    summary: 'Видеоразбор ситуации и движения, когда личный визит не нужен или вы находитесь в другом городе.',
+    tab: 'Эстетика улыбки',
+    eyebrow: 'Внешний вид зубов',
+    title: 'Эстетика улыбки',
+    summary: 'Обсудите, что хотели бы изменить в улыбке. Подходящие методы определяются после осмотра и оценки состояния зубов.',
     gives: [
-      'Структурировать проблему и понять, с чего начинать работу.',
-      'Разобрать доступные движения и текущую нагрузку в домашних условиях.',
-      'Получить последовательный план действий и критерии оценки прогресса.',
+      'Обсуждение ваших пожеланий и ожиданий.',
+      'Оценка состояния зубов и возможных ограничений.',
+      'Подбор дальнейших шагов и разъяснение вариантов.',
     ],
     fits: [
-      'Первичный разбор ситуации из любого города.',
-      'Контроль прогресса и корректировка текущей нагрузки.',
-      'Ситуации, когда очный приём неудобен или временно невозможен.',
+      'Вопросы о цвете или форме зубов.',
+      'Сколы, заметные дефекты и другие эстетические запросы.',
+      'Желание узнать о возможностях восстановления улыбки.',
     ],
-    price: '5 000 ₽',
-    duration: '60 минут',
+    price: 'Уточняется',
+    duration: 'Индивидуально',
     image: '/dimaonline.webp',
   },
 } as const;
+
+const visitReasons = [
+  {
+    number: '01',
+    title: 'Болит зуб',
+    text: 'Боль, чувствительность или дискомфорт при жевании — повод для осмотра. Стоматолог выяснит причину и объяснит, какое лечение может потребоваться.',
+  },
+  {
+    number: '02',
+    title: 'Хочется красивую улыбку',
+    text: 'Если беспокоят цвет, форма зубов или сколы, можно обсудить эстетические варианты. Решение подбирается с учётом состояния зубов и ваших пожеланий.',
+  },
+  {
+    number: '03',
+    title: 'Не хватает зуба',
+    text: 'Врач оценит состояние полости рта и расскажет о возможных способах восстановления. Подходящий вариант определяется после диагностики.',
+  },
+  {
+    number: '04',
+    title: 'Нужна профилактика',
+    text: 'Плановый осмотр помогает вовремя заметить проблемы, а консультация по гигиене — понять, как правильно ухаживать за зубами дома.',
+  },
+] as const;
 
 function CalendarIcon() {
   return (
@@ -67,11 +90,10 @@ function MenuIcon({ open }: { open: boolean }) {
   );
 }
 
-function TelegramIcon() {
+function PhoneIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M20.5 4.5 3.8 11.1c-.9.4-.8 1.1.2 1.4l4.2 1.3 1.6 5c.2.7.7.8 1.2.3l2.3-2.1 4.2 3.1c.7.5 1.3.2 1.5-.7L22 5.7c.2-1-.4-1.6-1.5-1.2Z" />
-      <path d="m8.2 13.8 9.5-6.1-7.9 7.1" />
+      <path d="M6 3h4l2 5-3 2c1.5 2.8 3.2 4.5 6 6l2-3 4 2v4a2 2 0 0 1-2.5 2C10 19.4 4.6 14 3 5.5A2 2 0 0 1 6 3Z" />
     </svg>
   );
 }
@@ -89,15 +111,14 @@ function ServiceIcon({ type }: { type: ServiceId }) {
   if (type === 'online') {
     return (
       <svg viewBox="0 0 42 42" aria-hidden="true">
-        <rect x="7" y="8" width="28" height="21" rx="4" />
-        <path d="M14 35h14M21 29v6M14 16h14M14 21h9" />
+        <path d="M21 5c-4-3-13-1-13 7 0 4 3 7 4 13 1 7 4 12 7 2l2-6 2 6c3 10 6 5 7-2 1-6 4-9 4-13 0-8-9-10-13-7Z" />
+        <path d="M34 4v8M30 8h8" />
       </svg>
     );
   }
   return (
     <svg viewBox="0 0 42 42" aria-hidden="true">
-      <circle cx="21" cy="11" r="5" />
-      <path d="M13 34c1-9 3.5-15 8-15s7 6 8 15M10 26h8M24 26h8" />
+      <path d="M21 5c-4-3-13-1-13 7 0 4 3 7 4 13 1 7 4 12 7 2l2-6 2 6c3 10 6 5 7-2 1-6 4-9 4-13 0-8-9-10-13-7Z" />
     </svg>
   );
 }
@@ -183,14 +204,14 @@ export default function MobileV2() {
     <main className="mobile-v2">
       <section className="m2-hero" id="m2-top" ref={heroRef}>
         <div className="m2-topbar">
-          <button className="m2-identity" type="button" onClick={() => goTo('m2-about')} aria-label="Перейти к разделу о Дмитрии">
+          <button className="m2-identity" type="button" onClick={() => goTo('m2-about')} aria-label="Перейти к разделу о клинике">
             <span className="m2-avatar">
-              <img src={asset('/dmitriyaglav.webp')} alt="Дмитрий Рихальский" />
+              <img src={asset('/dmitriyaglav.webp')} alt="Временное изображение для сайта клиники" />
               <i className="m2-online-dot" />
             </span>
             <span className="m2-identity-copy">
-              <strong>Рихальский Дмитрий</strong>
-              <small>Специалист по физической реабилитации</small>
+              <strong>Стоматологическая клиника</strong>
+              <small>Диагностика и лечение зубов</small>
             </span>
           </button>
 
@@ -205,30 +226,30 @@ export default function MobileV2() {
         </div>
 
         <div className="m2-hero-body">
-          <p className="m2-location" data-m2-reveal><span>●</span> Севастополь · очный приём по предварительной записи</p>
+          <p className="m2-location" data-m2-reveal><span>●</span> Приём по предварительной записи</p>
 
           <div className="m2-proof" data-m2-reveal>
-            <strong>13 лет <span>практики</span></strong>
+            <strong>Здоровье <span>зубов</span></strong>
             <i />
-            <strong>1000+ <span>клиентов</span></strong>
+            <strong>Эстетика <span>улыбки</span></strong>
           </div>
 
           <div className="m2-name-block" data-m2-reveal>
-            <span className="m2-name-label">Физическая реабилитация</span>
-            <h1><span>Рихальский Дмитрий</span><em>Александрович</em></h1>
-            <p>Специалист по физической реабилитации. Работает с болью и ограничениями движения, восстановлением после травм и безопасным возвращением к привычной нагрузке.</p>
+            <span className="m2-name-label">Стоматологическая клиника</span>
+            <h1><span>Стоматология</span><em>для вашей улыбки</em></h1>
+            <p>Лечение и здоровье зубов начинаются с внимательного осмотра. Понятно объясняем возможности стоматологии и каждый следующий шаг.</p>
           </div>
 
           <div className="m2-hero-space" />
 
           <div className="m2-hero-bottom" data-m2-reveal>
             <div className="m2-specialty-line">
-              <div><small>Специальность</small><strong>Физическая реабилитация</strong></div>
+              <div><small>Направление</small><strong>Стоматология</strong></div>
               <i />
-              <div><small>Категория</small><strong>Частная практика</strong></div>
+              <div><small>Формат</small><strong>Приём по записи</strong></div>
             </div>
             <button className="m2-button m2-primary" type="button" onClick={() => goToForm('offline')}>Записаться на приём <span>↗</span></button>
-            <button className="m2-button m2-outline m2-online-cta" type="button" onClick={() => goToForm('online')}>Онлайн-консультация <span>↗</span></button>
+            <button className="m2-button m2-outline m2-online-cta" type="button" onClick={() => goTo('m2-services')}>Посмотреть услуги <span>↗</span></button>
           </div>
         </div>
       </section>
@@ -240,8 +261,8 @@ export default function MobileV2() {
             <i className="m2-online-dot" />
           </span>
           <span className="m2-identity-copy">
-            <strong>Рихальский Дмитрий</strong>
-            <small>Специалист по физической реабилитации</small>
+            <strong>Стоматологическая клиника</strong>
+            <small>Диагностика и лечение зубов</small>
           </span>
         </button>
         <button className="m2-sticky-book" type="button" onClick={() => goToForm()}>Запись</button>
@@ -253,33 +274,33 @@ export default function MobileV2() {
       {menuOpen && (
         <nav className="m2-menu-panel" aria-label="Навигация">
           <button type="button" onClick={() => goTo('m2-services')}><span>01</span> Услуги</button>
-          <button type="button" onClick={() => goTo('m2-about')}><span>02</span> Обо мне</button>
+          <button type="button" onClick={() => goTo('m2-about')}><span>02</span> О клинике</button>
           <button type="button" onClick={() => goTo('m2-contact-form')}><span>03</span> Форма обращения</button>
         </nav>
       )}
 
       <section className="m2-education" id="m2-education">
         <div className="m2-photo-blend" data-m2-reveal>
-          <img src={asset('/dimadima.PNG')} alt="Дмитрий Рихальский" />
+          <img src={asset('/dimadima.PNG')} alt="Временное изображение для стоматологического шаблона" />
         </div>
 
         <div className="m2-education-cards">
           <article className="m2-info-card m2-info-wide" data-m2-reveal>
             <span className="m2-info-icon"><BookIcon /></span>
             <div>
-              <small>Образование</small>
-              <h2>Высшее образование — профессиональная база для системной работы с восстановлением движения.</h2>
+              <small>Первый визит</small>
+              <h2>Осмотр и понятные объяснения — основа осознанного выбора стоматологического лечения.</h2>
             </div>
           </article>
 
           <div className="m2-info-grid">
             <article className="m2-info-card" data-m2-reveal>
               <span className="m2-info-icon"><PeopleIcon /></span>
-              <div><strong>1600+</strong><p>аудитория профессионального блога</p></div>
+              <div><strong>Осмотр</strong><p>знакомство с ситуацией и вопросами пациента</p></div>
             </article>
             <article className="m2-info-card" data-m2-reveal>
               <span className="m2-info-icon"><UnionIcon /></span>
-              <div><small className="m2-nowrap">Проф. сообщество</small><strong>СРР</strong><p>член Союза реабилитологов России</p></div>
+              <div><small className="m2-nowrap">После осмотра</small><strong>План</strong><p>разбор вариантов и дальнейших шагов</p></div>
             </article>
           </div>
         </div>
@@ -291,7 +312,7 @@ export default function MobileV2() {
             <span className="m2-services-mark"><ServiceIcon type="offline" /></span>
             <h2>Услуги</h2>
           </div>
-          <p>Выберите формат консультации. В обоих случаях задача одна: разобраться в ситуации и определить понятный следующий шаг.</p>
+          <p>Выберите направление, чтобы узнать, с какими вопросами можно обратиться в стоматологию.</p>
         </header>
 
         <div className="m2-service-tabs" data-m2-reveal>
@@ -311,11 +332,11 @@ export default function MobileV2() {
 
           <div className="m2-detail-content">
             <section>
-              <h4>Что даёт:</h4>
+              <h4>Что обсудим:</h4>
               <ul>{service.gives.map((item) => <li key={item}>{item}</li>)}</ul>
             </section>
             <section>
-              <h4>Кому подходит:</h4>
+              <h4>Когда обратиться:</h4>
               <ul>{service.fits.map((item) => <li key={item}>{item}</li>)}</ul>
             </section>
           </div>
@@ -323,13 +344,13 @@ export default function MobileV2() {
           <div className="m2-service-meta">
             <div><small>Стоимость</small><strong>{service.price}</strong></div>
             <i />
-            <div><small>Длительность</small><strong>{service.duration}</strong></div>
+            <div><small>План приёма</small><strong>{service.duration}</strong></div>
           </div>
 
           <button className="m2-button m2-primary" type="button" onClick={() => goToForm(activeService)}>Записаться на приём <span>↗</span></button>
 
           <div className="m2-service-photo">
-            <img src={asset(service.image)} alt={`${service.title} с Дмитрием Рихальским`} />
+            <img src={asset(service.image)} alt={`Временное изображение для раздела «${service.title}»`} />
           </div>
         </article>
       </section>
@@ -337,46 +358,54 @@ export default function MobileV2() {
       <section className="m2-about" id="m2-about">
         <header className="m2-about-head" data-m2-reveal>
           <span className="m2-about-mark"><UnionIcon /></span>
-          <h2>Обо мне</h2>
+          <h2>О клинике</h2>
         </header>
 
-        <p className="m2-about-lead" data-m2-reveal>В работе Дмитрий соединяет оценку движения, понимание нагрузки и последовательную физическую реабилитацию. Цель — не набор случайных упражнений, а понятный план: что ограничивает движение сейчас и как безопасно двигаться дальше.</p>
+        <p className="m2-about-lead" data-m2-reveal>Стоматология — это не только лечение зубов, но и понятный путь от первого вопроса до выбора подходящего решения. Осмотр помогает определить состояние зубов, обсудить варианты и спланировать дальнейшие действия.</p>
 
         <div className="m2-achievements" data-m2-reveal>
-          <div><strong>13</strong><span>лет практики</span></div>
-          <div><strong>1000+</strong><span>клиентов</span></div>
-          <div><strong>СРР</strong><span>проф. сообщество</span></div>
+          <div><strong>01</strong><span>Осмотр</span></div>
+          <div><strong>02</strong><span>Обсуждение</span></div>
+          <div><strong>03</strong><span>План</span></div>
         </div>
 
         <div className="m2-about-photo" data-m2-reveal>
-          <img src={asset('/dimaosebe.webp')} alt="Дмитрий Рихальский — физическая реабилитация" />
+          <img src={asset('/dimaosebe.webp')} alt="Временное изображение для раздела о клинике" />
         </div>
 
         <div className="m2-request" data-m2-reveal ref={requestRef}>
-          <span>С чем обратиться</span>
-          <h3>Когда движение стало болезненным, ограниченным или непредсказуемым.</h3>
-          <div className="m2-request-scroll" aria-label="Частые запросы">
-            <b>Боль в спине, суставах и мышцах</b>
-            <b>Восстановление после травмы</b>
-            <b>Ограничение подвижности</b>
-            <b>Возвращение к спорту и нагрузке</b>
+          <span>С чем к нам обращаются</span>
+          <h3>Начните с вопроса, который беспокоит именно вас.</h3>
+          <div className="m2-request-scroll" aria-label="Популярные обращения">
+            {visitReasons.map((reason) => <b key={reason.number}>{reason.title}</b>)}
           </div>
-          <p>На консультации вы разберёте текущую ситуацию и получите пошаговый план дальнейших действий: что делать сейчас, какую нагрузку использовать и как оценивать прогресс.</p>
+          <div className="m2-request-explanations">
+            {visitReasons.map((reason) => (
+              <article className="m2-request-explanation" key={reason.number}>
+                <div className="m2-request-explanation-head">
+                  <span>{reason.number}</span>
+                  <h4>{reason.title}</h4>
+                </div>
+                <p>{reason.text}</p>
+              </article>
+            ))}
+          </div>
+          <p>Необязательно знать название процедуры заранее. На консультации можно описать свой запрос, а врач определит необходимые обследования и варианты дальнейших действий.</p>
         </div>
 
         <div className="m2-contact-card" data-m2-reveal>
           <div className="m2-contact-identity">
             <span className="m2-avatar m2-contact-avatar">
-              <img src={asset('/dmitriyaglav.webp')} alt="Дмитрий Рихальский" />
+              <img src={asset('/dmitriyaglav.webp')} alt="Стоматологическая клиника" />
               <i className="m2-online-dot" />
             </span>
-            <span><strong>Рихальский Дмитрий</strong><small>Специалист по физической реабилитации</small></span>
+            <span><strong>Стоматологическая клиника</strong><small>Контакты для записи появятся здесь</small></span>
           </div>
 
-          <div className="m2-contact-links" aria-label="Контакты Дмитрия">
-            <span className="m2-contact-link m2-contact-telegram"><i><TelegramIcon /></i><b>Telegram</b></span>
-            <span className="m2-contact-link"><i className="m2-i-mark">i</i><b>@dm_rihalsky</b></span>
-            <span className="m2-contact-link"><i><PinIcon /></i><b>Севастополь</b></span>
+          <div className="m2-contact-links" aria-label="Контакты стоматологической клиники">
+            <span className="m2-contact-link m2-contact-telegram"><i><PhoneIcon /></i><b>Телефон</b></span>
+            <span className="m2-contact-link"><i className="m2-i-mark">i</i><b>Уточняется</b></span>
+            <span className="m2-contact-link"><i><PinIcon /></i><b>Адрес уточняется</b></span>
           </div>
         </div>
       </section>
@@ -385,12 +414,12 @@ export default function MobileV2() {
         <div className="m2-form-head" data-m2-reveal>
           <span>Форма обращения</span>
           <h2>Оставьте заявку</h2>
-          <p>Оставьте заявку и мы свяжемся с вами в ближайшее время, чтобы проконсультировать.</p>
+          <p>Укажите контакты для записи. Администратор сможет связаться с вами после подключения формы к клинике.</p>
         </div>
 
-        <form className="m2-form" data-m2-reveal data-tanem-form="dmitriy-rihalsky" onSubmit={(event) => event.preventDefault()}>
-          <input type="hidden" name="specialist" value="Дмитрий Рихальский" readOnly />
-          <input type="hidden" name="source" value="dm-rihalsky-site" readOnly />
+        <form className="m2-form" data-m2-reveal onSubmit={(event) => event.preventDefault()}>
+          <input type="hidden" name="department" value="Стоматология" readOnly />
+          <input type="hidden" name="source" value="dentistry-mobile-demo" readOnly />
           <input type="hidden" name="service" value={activeService} readOnly />
 
           <label>
@@ -403,9 +432,10 @@ export default function MobileV2() {
           </label>
           <label>
             <span>Комментарий <small>необязательно</small></span>
-            <textarea name="comment" rows={4} placeholder="Коротко опишите, с чем хотите обратиться" />
+            <textarea name="comment" rows={4} placeholder="При желании укажите удобное время для звонка" />
           </label>
           <button type="submit">Оставить заявку <span>↗</span></button>
+          <p className="m2-form-demo-note">Демонстрационная форма: отправка заявок пока не подключена.</p>
         </form>
       </section>
     </main>
