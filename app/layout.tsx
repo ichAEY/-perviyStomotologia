@@ -2,22 +2,35 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import './desktop-perfect.css';
 import './desktop-polish.css';
+import './mobile-redesign.css';
 import './mobile-v2.css';
 import './mobile-v2-final.css';
 import './mobile-v2-hotfix.css';
 import './hero-visuals.css';
-import './template.css';
 import DesktopPerfect from './desktop-perfect';
 import MobileV2 from './mobile-v2';
 import MobileV2FinalPolish from './mobile-v2-final';
 import HeroVisualRotator from './hero-visuals';
 
 export const metadata: Metadata = {
-  title: 'Стоматология — шаблон TANEM',
-  description: 'Шаблон стоматологической клиники. Данные клиники заполняются перед запуском.',
-  robots: { index: false, follow: false },
-  openGraph: { title: 'Стоматология — шаблон TANEM', description: 'Демонстрационный шаблон стоматологической клиники.', type: 'website', locale: 'ru_RU' },
-  twitter: { card: 'summary', title: 'Стоматология — шаблон TANEM' },
+  metadataBase: new URL('https://ichaey.github.io/-dm_rihalsky/'),
+  title: 'Дмитрий Рихальский — физическая реабилитация',
+  description: '13+ лет практики. Физическая реабилитация очно в Севастополе и онлайн. Консультация 60 минут — 5 000 ₽.',
+  alternates: { canonical: '/' },
+  robots: { index: true, follow: true },
+  openGraph: {
+    title: 'Дмитрий Рихальский — физическая реабилитация',
+    description: 'Вернуться к движению. Севастополь · онлайн.',
+    type: 'website',
+    locale: 'ru_RU',
+    images: ['/og.png'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Дмитрий Рихальский — физическая реабилитация',
+    description: '13+ лет практики. Очно в Севастополе и онлайн.',
+    images: ['/og.png'],
+  },
 };
 
 export const viewport: Viewport = {

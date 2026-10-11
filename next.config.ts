@@ -1,7 +1,16 @@
 import type { NextConfig } from 'next';
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
-const config: NextConfig = {
-  output: 'export', basePath, assetPrefix: basePath || undefined,
-  trailingSlash: true, images: { unoptimized: true },
+
+const isGitHubPages = process.env.GITHUB_PAGES === 'true';
+const githubPagesBasePath = '/-dm_rihalsky';
+
+const nextConfig: NextConfig = {
+  output: isGitHubPages ? 'export' : undefined,
+  basePath: isGitHubPages ? githubPagesBasePath : '',
+  assetPrefix: isGitHubPages ? githubPagesBasePath : undefined,
+  trailingSlash: isGitHubPages,
+  images: {
+    unoptimized: isGitHubPages,
+  },
 };
-export default config;
+
+export default nextConfig;

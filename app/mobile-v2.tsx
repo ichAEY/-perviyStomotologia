@@ -2,8 +2,51 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-import { clinic, copy, services, firstService, secondService, asset, type ServiceId } from './site-content';
-import RequestForm from './request-form';
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+const asset = (path: string) => `${basePath}${path}`;
+
+type ServiceId = 'offline' | 'online';
+
+const services = {
+  offline: {
+    tab: 'Очный приём',
+    eyebrow: 'Севастополь',
+    title: 'Очный приём',
+    summary: 'Очная оценка состояния и движения с разбором ограничений и персональным планом дальнейшей работы.',
+    gives: [
+      'Определить движения и нагрузки, которые сейчас провоцируют дискомфорт.',
+      'Понять, какие ограничения действительно требуют внимания в первую очередь.',
+      'Получить понятный план восстановления и возвращения к привычной активности.',
+    ],
+    fits: [
+      'Боль и скованность в спине, суставах или мышцах.',
+      'Восстановление после травм и периода ограниченной активности.',
+      'Возвращение к тренировкам, спорту и повседневной нагрузке.',
+    ],
+    price: '5 000 ₽',
+    duration: '60 минут',
+    image: '/dimavhalate.webp',
+  },
+  online: {
+    tab: 'Онлайн',
+    eyebrow: 'Дистанционно',
+    title: 'Онлайн-консультация',
+    summary: 'Видеоразбор ситуации и движения, когда личный визит не нужен или вы находитесь в другом городе.',
+    gives: [
+      'Структурировать проблему и понять, с чего начинать работу.',
+      'Разобрать доступные движения и текущую нагрузку в домашних условиях.',
+      'Получить последовательный план действий и критерии оценки прогресса.',
+    ],
+    fits: [
+      'Первичный разбор ситуации из любого города.',
+      'Контроль прогресса и корректировка текущей нагрузки.',
+      'Ситуации, когда очный приём неудобен или временно невозможен.',
+    ],
+    price: '5 000 ₽',
+    duration: '60 минут',
+    image: '/dimaonline.webp',
+  },
+} as const;
 
 function CalendarIcon() {
   return (
@@ -24,8 +67,13 @@ function MenuIcon({ open }: { open: boolean }) {
   );
 }
 
-function PhoneIcon() {
-  return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h4l2 5-3 2c2 3 3 4 6 6l2-3 5 2v4c0 2-2 3-4 2C10 19 5 14 3 7c-1-2 0-4 2-4Z" /></svg>;
+function TelegramIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M20.5 4.5 3.8 11.1c-.9.4-.8 1.1.2 1.4l4.2 1.3 1.6 5c.2.7.7.8 1.2.3l2.3-2.1 4.2 3.1c.7.5 1.3.2 1.5-.7L22 5.7c.2-1-.4-1.6-1.5-1.2Z" />
+      <path d="m8.2 13.8 9.5-6.1-7.9 7.1" />
+    </svg>
+  );
 }
 
 function PinIcon() {
@@ -38,7 +86,7 @@ function PinIcon() {
 }
 
 function ServiceIcon({ type }: { type: ServiceId }) {
-  if (type === secondService) {
+  if (type === 'online') {
     return (
       <svg viewBox="0 0 42 42" aria-hidden="true">
         <rect x="7" y="8" width="28" height="21" rx="4" />
@@ -84,7 +132,7 @@ function UnionIcon() {
 
 export default function MobileV2() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeService, setActiveService] = useState<ServiceId>(firstService);
+  const [activeService, setActiveService] = useState<ServiceId>('offline');
   const [stickyVisible, setStickyVisible] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
   const requestRef = useRef<HTMLDivElement>(null);
@@ -135,14 +183,14 @@ export default function MobileV2() {
     <main className="mobile-v2">
       <section className="m2-hero" id="m2-top" ref={heroRef}>
         <div className="m2-topbar">
-          <button className="m2-identity" type="button" onClick={() => goTo('m2-about')} aria-label="Перейти к разделу о клинике">
+          <button className="m2-identity" type="button" onClick={() => goTo('m2-about')} aria-label="Перейти к разделу о Дмитрии">
             <span className="m2-avatar">
-              <img src={asset('/assets/favicon.svg')} alt={copy.subtitle} />
-              
+              <img src={asset('/dmitriyaglav.webp')} alt="Дмитрий Рихальский" />
+              <i className="m2-online-dot" />
             </span>
             <span className="m2-identity-copy">
-              <strong>{clinic.name}</strong>
-              <small>{copy.subtitle}</small>
+              <strong>Рихальский Дмитрий</strong>
+              <small>Специалист по физической реабилитации</small>
             </span>
           </button>
 
@@ -157,30 +205,30 @@ export default function MobileV2() {
         </div>
 
         <div className="m2-hero-body">
-          <p className="m2-location" data-m2-reveal><span>●</span> {copy.location}</p>
+          <p className="m2-location" data-m2-reveal><span>●</span> Севастополь · очный приём по предварительной записи</p>
 
           <div className="m2-proof" data-m2-reveal>
-            <strong>{copy.facts[0].value} <span>{copy.facts[0].label}</span></strong>
+            <strong>13 лет <span>практики</span></strong>
             <i />
-            <strong>{copy.facts[1].value} <span>{copy.facts[1].label}</span></strong>
+            <strong>1000+ <span>клиентов</span></strong>
           </div>
 
           <div className="m2-name-block" data-m2-reveal>
-            <span className="m2-name-label">{copy.subtitle}</span>
-            <h1><span>{copy.mobileTitle}</span><em>{copy.mobileAccent}</em></h1>
-            <p>{clinic.heroDescription}</p>
+            <span className="m2-name-label">Физическая реабилитация</span>
+            <h1><span>Рихальский Дмитрий</span><em>Александрович</em></h1>
+            <p>Специалист по физической реабилитации. Работает с болью и ограничениями движения, восстановлением после травм и безопасным возвращением к привычной нагрузке.</p>
           </div>
 
           <div className="m2-hero-space" />
 
           <div className="m2-hero-bottom" data-m2-reveal>
             <div className="m2-specialty-line">
-              <div><small>Направление</small><strong>{copy.subtitle}</strong></div>
+              <div><small>Специальность</small><strong>Физическая реабилитация</strong></div>
               <i />
-              <div><small>Категория</small><strong>Приём в клинике</strong></div>
+              <div><small>Категория</small><strong>Частная практика</strong></div>
             </div>
-            <button className="m2-button m2-primary" type="button" onClick={() => goToForm(firstService)}>Записаться на приём <span>↗</span></button>
-            <button className="m2-button m2-outline m2-online-cta" type="button" onClick={() => goTo('m2-services')}>Посмотреть услуги <span>↗</span></button>
+            <button className="m2-button m2-primary" type="button" onClick={() => goToForm('offline')}>Записаться на приём <span>↗</span></button>
+            <button className="m2-button m2-outline m2-online-cta" type="button" onClick={() => goToForm('online')}>Онлайн-консультация <span>↗</span></button>
           </div>
         </div>
       </section>
@@ -188,12 +236,12 @@ export default function MobileV2() {
       <div className={`m2-sticky${stickyVisible ? ' is-visible' : ''}`}>
         <button className="m2-identity m2-sticky-identity" type="button" onClick={() => goTo('m2-top')}>
           <span className="m2-avatar m2-avatar-small">
-            <img src={asset('/assets/favicon.svg')} alt="" />
-            
+            <img src={asset('/dmitriyaglav.webp')} alt="" />
+            <i className="m2-online-dot" />
           </span>
           <span className="m2-identity-copy">
-            <strong>{clinic.name}</strong>
-            <small>{copy.subtitle}</small>
+            <strong>Рихальский Дмитрий</strong>
+            <small>Специалист по физической реабилитации</small>
           </span>
         </button>
         <button className="m2-sticky-book" type="button" onClick={() => goToForm()}>Запись</button>
@@ -205,33 +253,33 @@ export default function MobileV2() {
       {menuOpen && (
         <nav className="m2-menu-panel" aria-label="Навигация">
           <button type="button" onClick={() => goTo('m2-services')}><span>01</span> Услуги</button>
-          <button type="button" onClick={() => goTo('m2-about')}><span>02</span> О клинике</button>
+          <button type="button" onClick={() => goTo('m2-about')}><span>02</span> Обо мне</button>
           <button type="button" onClick={() => goTo('m2-contact-form')}><span>03</span> Форма обращения</button>
         </nav>
       )}
 
       <section className="m2-education" id="m2-education">
         <div className="m2-photo-blend" data-m2-reveal>
-          <img src={asset(clinic.heroImage)} alt={clinic.heroImageAlt} /><small className="template-media-caption">{clinic.heroImageCaption}</small>
+          <img src={asset('/dimadima.PNG')} alt="Дмитрий Рихальский" />
         </div>
 
         <div className="m2-education-cards">
           <article className="m2-info-card m2-info-wide" data-m2-reveal>
             <span className="m2-info-icon"><BookIcon /></span>
             <div>
-              <small>{copy.credentials.title}</small>
-              <h2>{copy.credentials.description}</h2>
+              <small>Образование</small>
+              <h2>Высшее образование — профессиональная база для системной работы с восстановлением движения.</h2>
             </div>
           </article>
 
           <div className="m2-info-grid">
             <article className="m2-info-card" data-m2-reveal>
               <span className="m2-info-icon"><PeopleIcon /></span>
-              <div><strong>{copy.credentials.statValue}</strong><p>{copy.credentials.statText}</p></div>
+              <div><strong>1600+</strong><p>аудитория профессионального блога</p></div>
             </article>
             <article className="m2-info-card" data-m2-reveal>
               <span className="m2-info-icon"><UnionIcon /></span>
-              <div><small className="m2-nowrap">{copy.credentials.detailTitle}</small><strong>{copy.credentials.detailValue}</strong><p>{copy.credentials.detailText}</p></div>
+              <div><small className="m2-nowrap">Проф. сообщество</small><strong>СРР</strong><p>член Союза реабилитологов России</p></div>
             </article>
           </div>
         </div>
@@ -240,10 +288,10 @@ export default function MobileV2() {
       <section className="m2-services" id="m2-services">
         <header className="m2-services-head" data-m2-reveal>
           <div className="m2-services-title">
-            <span className="m2-services-mark"><ServiceIcon type={firstService} /></span>
+            <span className="m2-services-mark"><ServiceIcon type="offline" /></span>
             <h2>Услуги</h2>
           </div>
-          <p>{copy.serviceNotes}</p>
+          <p>Выберите формат консультации. В обоих случаях задача одна: разобраться в ситуации и определить понятный следующий шаг.</p>
         </header>
 
         <div className="m2-service-tabs" data-m2-reveal>
@@ -263,11 +311,11 @@ export default function MobileV2() {
 
           <div className="m2-detail-content">
             <section>
-              <h4>Что входит:</h4>
+              <h4>Что даёт:</h4>
               <ul>{service.gives.map((item) => <li key={item}>{item}</li>)}</ul>
             </section>
             <section>
-              <h4>Об услуге:</h4>
+              <h4>Кому подходит:</h4>
               <ul>{service.fits.map((item) => <li key={item}>{item}</li>)}</ul>
             </section>
           </div>
@@ -275,13 +323,13 @@ export default function MobileV2() {
           <div className="m2-service-meta">
             <div><small>Стоимость</small><strong>{service.price}</strong></div>
             <i />
-            <div><small>Расчёт стоимости</small><strong>{service.unit}</strong></div>
+            <div><small>Длительность</small><strong>{service.duration}</strong></div>
           </div>
 
           <button className="m2-button m2-primary" type="button" onClick={() => goToForm(activeService)}>Записаться на приём <span>↗</span></button>
 
           <div className="m2-service-photo">
-            <img src={asset(service.image)} alt={clinic.serviceImageAlt} /><small className="template-media-caption">{clinic.serviceImageCaption}</small>
+            <img src={asset(service.image)} alt={`${service.title} с Дмитрием Рихальским`} />
           </div>
         </article>
       </section>
@@ -289,41 +337,46 @@ export default function MobileV2() {
       <section className="m2-about" id="m2-about">
         <header className="m2-about-head" data-m2-reveal>
           <span className="m2-about-mark"><UnionIcon /></span>
-          <h2>О клинике</h2>
+          <h2>Обо мне</h2>
         </header>
 
-        <p className="m2-about-lead" data-m2-reveal>{clinic.description}</p>
+        <p className="m2-about-lead" data-m2-reveal>В работе Дмитрий соединяет оценку движения, понимание нагрузки и последовательную физическую реабилитацию. Цель — не набор случайных упражнений, а понятный план: что ограничивает движение сейчас и как безопасно двигаться дальше.</p>
 
         <div className="m2-achievements" data-m2-reveal>
-          {copy.facts.map((fact) => <div key={fact.label}><strong>{fact.value}</strong><span>{fact.label}</span></div>)}
+          <div><strong>13</strong><span>лет практики</span></div>
+          <div><strong>1000+</strong><span>клиентов</span></div>
+          <div><strong>СРР</strong><span>проф. сообщество</span></div>
         </div>
 
         <div className="m2-about-photo" data-m2-reveal>
-          <img src={asset(clinic.clinicImage)} alt={clinic.clinicImageAlt} /><small className="template-media-caption">{clinic.clinicImageCaption}</small>
+          <img src={asset('/dimaosebe.webp')} alt="Дмитрий Рихальский — физическая реабилитация" />
         </div>
 
         <div className="m2-request" data-m2-reveal ref={requestRef}>
           <span>С чем обратиться</span>
-          <h3>{copy.requestTitle}</h3>
+          <h3>Когда движение стало болезненным, ограниченным или непредсказуемым.</h3>
           <div className="m2-request-scroll" aria-label="Частые запросы">
-            {copy.requests.map(([number, title]) => <b key={number}>{title}</b>)}
+            <b>Боль в спине, суставах и мышцах</b>
+            <b>Восстановление после травмы</b>
+            <b>Ограничение подвижности</b>
+            <b>Возвращение к спорту и нагрузке</b>
           </div>
-          <p>{copy.requestDescription}</p>
+          <p>На консультации вы разберёте текущую ситуацию и получите пошаговый план дальнейших действий: что делать сейчас, какую нагрузку использовать и как оценивать прогресс.</p>
         </div>
 
         <div className="m2-contact-card" data-m2-reveal>
           <div className="m2-contact-identity">
             <span className="m2-avatar m2-contact-avatar">
-              <img src={asset('/assets/favicon.svg')} alt={copy.subtitle} />
-              
+              <img src={asset('/dmitriyaglav.webp')} alt="Дмитрий Рихальский" />
+              <i className="m2-online-dot" />
             </span>
-            <span><strong>{clinic.name}</strong><small>{copy.subtitle}</small></span>
+            <span><strong>Рихальский Дмитрий</strong><small>Специалист по физической реабилитации</small></span>
           </div>
 
-          <div className="m2-contact-links" aria-label="Контакты клиники">
-            <span className="m2-contact-link m2-contact-telegram"><i><PhoneIcon /></i><b>Телефон</b></span>
-            <span className="m2-contact-link"><i className="m2-i-mark">i</i><b>{clinic.phone || 'Телефон клиники'}</b></span>
-            <span className="m2-contact-link"><i><PinIcon /></i><b>{clinic.address || copy.location}</b></span>
+          <div className="m2-contact-links" aria-label="Контакты Дмитрия">
+            <span className="m2-contact-link m2-contact-telegram"><i><TelegramIcon /></i><b>Telegram</b></span>
+            <span className="m2-contact-link"><i className="m2-i-mark">i</i><b>@dm_rihalsky</b></span>
+            <span className="m2-contact-link"><i><PinIcon /></i><b>Севастополь</b></span>
           </div>
         </div>
       </section>
@@ -332,10 +385,28 @@ export default function MobileV2() {
         <div className="m2-form-head" data-m2-reveal>
           <span>Форма обращения</span>
           <h2>Оставьте заявку</h2>
-          <p>{copy.requestDescription}</p>
+          <p>Оставьте заявку и мы свяжемся с вами в ближайшее время, чтобы проконсультировать.</p>
         </div>
 
-        <RequestForm variant="mobile" serviceId={activeService} />
+        <form className="m2-form" data-m2-reveal data-tanem-form="dmitriy-rihalsky" onSubmit={(event) => event.preventDefault()}>
+          <input type="hidden" name="specialist" value="Дмитрий Рихальский" readOnly />
+          <input type="hidden" name="source" value="dm-rihalsky-site" readOnly />
+          <input type="hidden" name="service" value={activeService} readOnly />
+
+          <label>
+            <span>ФИО</span>
+            <input name="fullName" type="text" autoComplete="name" placeholder="Иван Иванов" required />
+          </label>
+          <label>
+            <span>Телефон</span>
+            <input name="phone" type="tel" autoComplete="tel" inputMode="tel" placeholder="+7 999 000-00-00" required />
+          </label>
+          <label>
+            <span>Комментарий <small>необязательно</small></span>
+            <textarea name="comment" rows={4} placeholder="Коротко опишите, с чем хотите обратиться" />
+          </label>
+          <button type="submit">Оставить заявку <span>↗</span></button>
+        </form>
       </section>
     </main>
   );

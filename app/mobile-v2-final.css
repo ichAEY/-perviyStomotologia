@@ -10,10 +10,10 @@
   .m2-button{font-size:11px;font-weight:650;letter-spacing:-.01em;line-height:1}
   .m2-sticky-book{font-size:8.7px;font-weight:680;letter-spacing:0;line-height:1}
 
-  /* Equalize the typography of the two summary cards. */
+  /* Make 1600+ visually equal to СРР. */
   .m2-info-grid article:first-child strong{font-size:18px}
 
-  /* Blend portrait image into the neighbouring sections at both edges. */
+  /* Blend dimadima into the neighbouring sections at both edges. */
   .m2-photo-blend{background:#edf3f7}
   .m2-photo-blend img{
     -webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 8%,#000 91%,transparent 100%);

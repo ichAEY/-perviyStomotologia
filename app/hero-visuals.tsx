@@ -2,8 +2,8 @@
 
 import { useEffect } from 'react';
 
-import { basePath, copy } from './site-content';
-const visuals = copy.ribbonImages;
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+const visuals = Array.from({ length: 8 }, (_, index) => `/kosti${String(index + 1).padStart(5, '0')}.webp`);
 
 export default function HeroVisualRotator() {
   useEffect(() => {

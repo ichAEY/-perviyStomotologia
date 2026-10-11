@@ -1,0 +1,4 @@
+/* Final small override layer for the rebuilt Dmitry site. */
+.vertebra {
+  transform: translateX(-50%) rotate(calc((var(--i) - 6) * .9deg));
+}
