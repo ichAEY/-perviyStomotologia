@@ -27,7 +27,7 @@ if (new Set(ids).size !== ids.length) throw new Error('Повторяющиес�
 for (const [, id] of html.matchAll(/href="#([^"]+)"/g)) if (!ids.includes(id)) throw new Error(`Нет якоря #${id}`);
 const app = await readFile(resolve(root, 'public/app.js'), 'utf8');
 for (const [, id] of app.matchAll(/\$\('([^']+)'\)/g)) if (!ids.includes(id)) throw new Error(`Нет элемента ${id}`);
-for (const path of ['assets/clinic-hero.webp', 'assets/manrope.ttf', 'assets/Manrope-OFL.txt', 'styles.css', 'app.js', 'site-data.js', 'validation.js']) {
+for (const path of ['assets/clinic-hero.webp', 'assets/clinician-editorial.webp', 'assets/clinic-editorial.webp', 'assets/manrope.ttf', 'assets/Manrope-OFL.txt', 'styles.css', 'app.js', 'site-data.js', 'validation.js']) {
   if (!(await stat(resolve(root, 'public', path))).size) throw new Error(`Пустой ресурс ${path}`);
 }
 console.log(`Checked JavaScript, configuration, ${ids.length} unique element IDs, anchors and local assets. Mode: ${data.mode}.`);

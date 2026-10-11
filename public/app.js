@@ -51,14 +51,50 @@ $('clinic-facts').innerHTML = [
 ].map(([label, value]) => `<div class="clinic-fact"><small>${escape(label)}</small><strong>${escape(value)}</strong></div>`).join('');
 $('copyright').textContent = clinic.legalName || 'Образец цифрового офиса стоматологии';
 
-$('services-grid').innerHTML = data.services.map(service => `
-  <details class="service-card" id="service-${escape(service.id)}">
-    <summary><span class="service-icon">${icon(service.icon)}</span><h3>${escape(service.title)}</h3><p>${escape(service.description)}</p><span class="service-expand" aria-hidden="true">+</span></summary>
-    <div class="service-detail">${service.items.map(item => `<div class="service-row"><div class="service-row-top"><strong>${escape(item.name)}</strong>${priceMarkup(item)}</div><p>${escape(item.includes)}</p></div>`).join('')}<a class="text-link" href="#request">Записаться на приём <span aria-hidden="true">↗</span></a></div>
-  </details>`).join('');
-$('doctors-grid').innerHTML = data.doctors.map(doctor => {
+// Один набор вкладок для всех экранов. Стрелки/Home/End перемещают фокус.
+const services = $('services-grid');
+services.innerHTML = data.services.map((service, index) => `<button type="button" class="service-tab" role="tab" id="service-tab-${index}" aria-controls="service-panel" aria-selected="${index === 0}" tabindex="${index === 0 ? 0 : -1}" data-service-index="${index}"><small>${String(index + 1).padStart(2, '0')}</small><strong>${escape(service.title)}</strong><span class="service-icon">${icon(service.icon)}</span></button>`).join('');
+const serviceTabs = [...services.querySelectorAll('[role=tab]')];
+function selectService(index, focus = false) {
+  const service = data.services[index];
+  if (!service) return;
+  serviceTabs.forEach((tab, position) => {
+    tab.setAttribute('aria-selected', String(position === index));
+    tab.tabIndex = position === index ? 0 : -1;
+  });
+  const panel = $('service-panel');
+  panel.setAttribute('aria-labelledby', `service-tab-${index}`);
+  const source = safeUrl(clinic.serviceImage || clinic.clinicImage);
+  const alt = clinic.serviceImageAlt || clinic.clinicImageAlt || '';
+  const caption = clinic.serviceImageCaption || clinic.clinicImageCaption || '';
+  panel.innerHTML = `<div class="service-feature"><div class="service-panel-copy"><span class="section-label">Направление / ${String(index + 1).padStart(2, '0')}</span><h3>${escape(service.title)}</h3><p>${escape(service.description)}</p></div>${source ? `<figure class="service-image"><img src="${escape(source)}" alt="${escape(alt)}" width="1536" height="1024" loading="lazy">${caption ? `<figcaption>${escape(caption)}</figcaption>` : ''}</figure>` : ''}</div><div class="service-detail">${service.items.map(item => `<div class="service-row"><div class="service-row-top"><strong>${escape(item.name)}</strong>${priceMarkup(item)}</div><p>${escape(item.includes)}</p></div>`).join('')}<div class="service-panel-bottom"><p>Объём лечения и итоговую стоимость врач обсуждает после осмотра и диагностики.</p><a class="button button-primary" href="#request">Записаться <span aria-hidden="true">↗</span></a></div></div>`;
+  if (focus) serviceTabs[index].focus();
+}
+if (data.services.length) selectService(0);
+else {
+  services.hidden = true;
+  $('service-panel').removeAttribute('role');
+  $('service-panel').removeAttribute('tabindex');
+  $('service-panel').textContent = 'Информация об услугах добавляется клиникой.';
+}
+services.addEventListener('click', event => {
+  const tab = event.target.closest('[data-service-index]');
+  if (tab) selectService(Number(tab.dataset.serviceIndex));
+});
+services.addEventListener('keydown', event => {
+  const tab = event.target.closest('[data-service-index]');
+  if (!tab) return;
+  const current = Number(tab.dataset.serviceIndex);
+  let next;
+  if (['ArrowDown', 'ArrowRight'].includes(event.key)) next = (current + 1) % serviceTabs.length;
+  if (['ArrowUp', 'ArrowLeft'].includes(event.key)) next = (current - 1 + serviceTabs.length) % serviceTabs.length;
+  if (event.key === 'Home') next = 0;
+  if (event.key === 'End') next = serviceTabs.length - 1;
+  if (next !== undefined) { event.preventDefault(); selectService(next, true); }
+});
+$('doctors-grid').innerHTML = data.doctors.map((doctor, index) => {
   const photo = doctor.photo && safeUrl(doctor.photo);
-  return `<article class="doctor-card"><div class="doctor-photo">${photo ? `<img src="${escape(photo)}" alt="${escape(doctor.name)}" loading="lazy">` : `${portrait}<span>Фотография врача</span>`}${isDemo ? '<span class="demo-label">Образец карточки</span>' : ''}</div><div class="doctor-body"><h3>${escape(doctor.name || doctor.specialty)}</h3><p class="doctor-specialty">${escape(doctor.name ? doctor.specialty : 'Данные врача добавляются клиникой')}</p><p>${escape(doctor.description)}</p><button class="text-link" data-doctor="${escape(doctor.id)}">О враче <span aria-hidden="true">↗</span></button></div></article>`;
+  return `<article class="doctor-card"><div class="doctor-photo">${photo ? `<img src="${escape(photo)}" alt="${escape(doctor.name)}" loading="lazy">` : `<span class="doctor-number">${String(index + 1).padStart(2, '0')}</span>${portrait}<span>Место для фото врача</span>`}${isDemo ? '<span class="demo-label">Образец карточки</span>' : ''}</div><div class="doctor-body"><h3>${escape(doctor.name || doctor.specialty)}</h3><p class="doctor-specialty">${escape(doctor.name ? doctor.specialty : 'Данные добавляются клиникой')}</p><p>${escape(doctor.description)}</p><button class="text-link" data-doctor="${escape(doctor.id)}">О специалисте <span aria-hidden="true">↗</span></button></div></article>`;
 }).join('');
 $('faq-list').innerHTML = data.faq.map(item => `<details class="faq-item"><summary>${escape(item.question)}<span aria-hidden="true">+</span></summary><p>${escape(item.answer)}</p></details>`).join('');
 $('reviews-content').innerHTML = data.reviews.length ? `<div class="reviews-grid">${data.reviews.map(review => `<article class="review-card"><strong>${escape(review.author)}</strong><p>${escape(review.text)}</p>${safeUrl(review.url) ? `<a class="text-link" href="${escape(safeUrl(review.url))}" target="_blank" rel="noopener noreferrer">Источник отзыва ↗</a>` : ''}</article>`).join('')}</div>` : '<div class="empty-state"><div><strong>Здесь будут отзывы пациентов</strong><p>В образце отзывы не добавлены. В цифровом офисе клиники публикуются реальные отзывы с доступными ссылками на источник.</p></div><span>Только реальные истории ↗</span></div>';

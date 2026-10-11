@@ -19,6 +19,7 @@ function liveData() {
   data.clinic.phone = '+7 999 000-00-00';
   data.clinic.heroImage = './assets/real-clinic-test.jpg';
   data.clinic.clinicImage = './assets/real-clinic-test.jpg';
+  data.clinic.serviceImage = '';
   data.consentVersion = 'test-v1';
   data.services.forEach(service => service.items.forEach(item => item.price = 100));
   data.doctors.forEach(doctor => {
@@ -50,6 +51,11 @@ test('live configuration cannot start with unfilled demo data', () => {
   assert.equal(validateConfig(demo).length, 0);
   assert.ok(validateConfig({ ...demo, mode:'live' }).length > 10);
   assert.equal(validateConfig(liveData()).length, 0);
+  for (const key of ['heroImage', 'clinicImage', 'serviceImage']) {
+    const input = liveData();
+    input.clinic[key] = './assets/clinician-editorial.webp';
+    assert.ok(validateConfig(input).some(error => error.includes('Замените иллюстрацию')));
+  }
 });
 test('request is persisted before success; repeating the same request creates one record', async t => {
   const { post, store } = await fixture(t);
@@ -142,7 +148,7 @@ test('static server protects private files and returns security headers', async 
   const page = await fetch(base);
   assert.equal(page.status, 200);
   assert.match(page.headers.get('content-security-policy'), /frame-ancestors 'none'/);
-  assert.match(await page.text(), /Здоровье зубов/);
+  assert.match(await page.text(), /<main id="main">/);
   assert.equal((await fetch(`${base}/.env`)).status, 404);
   assert.equal((await fetch(`${base}/server/store.js`)).status, 404);
 });

@@ -13,7 +13,9 @@ export function validateConfig(data) {
     if (!clinic[key]?.trim()) errors.push(`Заполните clinic.${key}`);
   }
   if (!normalizePhone(clinic.phone)) errors.push('Нужен действительный телефон клиники');
-  for (const key of ['heroImage', 'clinicImage']) if (clinic[key]?.includes('clinic-hero.webp')) errors.push(`Замените иллюстрацию на фотографию клиники: ${key}`);
+  for (const key of ['heroImage', 'clinicImage', 'serviceImage']) {
+    if (['clinic-hero.webp', 'clinician-editorial.webp', 'clinic-editorial.webp'].some(file => clinic[key]?.includes(file))) errors.push(`Замените иллюстрацию на фотографию клиники: ${key}`);
+  }
   if (!data.consentVersion?.trim()) errors.push('Нужна версия согласия');
   if (!data.services.length) errors.push('Добавьте услуги клиники');
   for (const service of data.services) {
