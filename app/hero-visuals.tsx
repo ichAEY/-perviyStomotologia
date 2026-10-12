@@ -89,6 +89,6 @@ export default function HeroVisualRotator() {
         </div>)}
       </div>
     </div>
-    <button type="button" className="m2-ribbon-toggle" onClick={() => setPaused(!paused)} aria-pressed={paused}>{paused ? 'Продолжить анимацию' : 'Приостановить анимацию'}</button>
+    <button type="button" className="m2-ribbon-toggle" onClick={() => setPaused(!paused)} aria-pressed={paused} aria-label={paused ? 'Продолжить анимацию' : 'Приостановить анимацию'}>{paused ? <span aria-hidden="true">▷</span> : <span className="m2-pause-icon" aria-hidden="true"><i /><i /></span>}</button>
   </div>;
 }

@@ -2,9 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { clinic } from './clinic-data';
 import './globals.css';
 import './desktop-perfect.css';
-import './desktop-polish.css';
 import './mobile-v2.css';
-import './mobile-v2-final.css';
 import './hero-visuals.css';
 import './clinic-adjustments.css';
 
@@ -23,12 +21,12 @@ export const metadata: Metadata = {
   twitter: { card: 'summary_large_image', title: clinic.name + ' — стоматология в Москве', description: clinic.fullAddress, images: [clinic.siteUrl + 'assets/dental-care.webp'] },
 };
 
-export const viewport: Viewport = { width: 'device-width', initialScale: 1, viewportFit: 'cover', themeColor: '#f4f7f9', colorScheme: 'light' };
+export const viewport: Viewport = { width: 'device-width', initialScale: 1, viewportFit: 'cover', themeColor: '#fafcfe', colorScheme: 'light' };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const structuredData = { '@context': 'https://schema.org', '@type': 'Dentist', name: clinic.name, url: clinic.siteUrl, telephone: clinic.phone, email: clinic.email,
     address: { '@type': 'PostalAddress', streetAddress: clinic.address, addressLocality: clinic.city, addressCountry: 'RU' },
     openingHoursSpecification: { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'], opens: '10:00', closes: '21:00' },
   };
-  return <html lang="ru" suppressHydrationWarning><head><script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js');" }} /></head><body>{children}<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, '\\u003c') }} /></body></html>;
+  return <html lang="ru"><body>{children}<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, '\\u003c') }} /></body></html>;
 }

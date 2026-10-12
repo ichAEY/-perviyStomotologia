@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { clinic } from './clinic-data';
 import { consultationMailto, normalizePhone } from './consultation';
 
@@ -8,6 +8,7 @@ export default function ConsultationForm({ variant, request }: { variant: 'mobil
   const [error, setError] = useState('');
   const [draft, setDraft] = useState('');
   const prefix = variant === 'mobile' ? 'm2' : 'dp';
+  useEffect(() => { setDraft(''); setError(''); }, [request]);
   const onSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -21,13 +22,13 @@ export default function ConsultationForm({ variant, request }: { variant: 'mobil
   };
 
   return <form className={prefix + '-form clinic-consultation-form'} onSubmit={onSubmit} noValidate>
-    <div className="clinic-form-request"><small>Ваш вопрос</small><strong>{request}</strong></div>
-    <label><span>Телефон</span><input name="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="+7 ___ ___-__-__" required maxLength={30} aria-describedby={prefix + '-delivery-note'} /></label>
-    <label><span>Как к вам обращаться <small>необязательно</small></span><input name="name" type="text" autoComplete="given-name" placeholder="Ваше имя" maxLength={80} /></label>
-    <label className="clinic-consent"><input name="consent" type="checkbox" required /><span>Согласен отправить имя и телефон в «{clinic.name}» по электронной почте для ответа на обращение.</span></label>
+    {request !== 'Консультация стоматолога' && <div className="clinic-form-request"><small>Ваш вопрос</small><strong>{request}</strong></div>}
+    <label><span>Телефон</span><input name="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="+7 (999) 123-45-67" required maxLength={30} aria-describedby={prefix + '-delivery-note'} /></label>
+    <label><span>Имя <small>необязательно</small></span><input name="name" type="text" autoComplete="given-name" placeholder="Ваше имя" maxLength={80} /></label>
+    <label className="clinic-consent"><input name="consent" type="checkbox" required /><span>Согласен отправить контакты в «{clinic.name}» для ответа на обращение.</span></label>
     {error && <p className="clinic-form-error" role="alert">{error}</p>}
     <button type="submit">{clinic.consultationCta}<span aria-hidden="true">↗</span></button>
-    <p className="clinic-delivery-note" id={prefix + '-delivery-note'}>Откроется письмо на {clinic.email}. Отправьте его из своего почтового приложения.</p>
+    <p className="clinic-delivery-note" id={prefix + '-delivery-note'}>Откроется письмо в клинику. Отправьте его из своего почтового приложения.</p>
     {draft && <div className="clinic-mail-status" role="status"><p>Письмо подготовлено. Обращение будет доставлено после его отправки.</p><a href={draft}>Открыть письмо ещё раз ↗</a></div>}
     <a className="clinic-phone-alternative" href={clinic.phoneHref}>Или позвоните: {clinic.phone}</a>
   </form>;
