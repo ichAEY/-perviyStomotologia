@@ -1,10 +1,10 @@
 .desktop-perfect{display:none}
 
 @media (min-width:768px){
-  /* Final desktop polish: full-bleed hero, centered services, tighter about, readable form */
+  
   .desktop-perfect{display:block}
 
-  /* HERO — remove the card/frame feeling and let the first screen breathe full width */
+  
   .dp-hero{
     padding:0;
     background:#f7f9fc;
@@ -61,14 +61,14 @@
   .dp-photo-caption b{font-size:15px}
   .dp-photo-caption small,.dp-photo-status{font-size:11px}
 
-  /* CREDENTIALS — less card noise, more readable type */
+  
   .dp-credentials{padding:28px 0 88px}
   .dp-credential-main,.dp-credential-stat{min-height:172px}
   .dp-credential-main h2{font-size:22px;line-height:1.4}
   .dp-credential-main small,.dp-credential-stat small{font-size:10px}
   .dp-credential-stat p{font-size:13px;line-height:1.5}
 
-  /* SERVICES — centered hierarchy and horizontal format selector */
+  
   .dp-services{padding:94px 0 108px}
   .dp-section-heading{
     display:flex;
@@ -193,7 +193,7 @@
     min-height:560px;
   }
 
-  /* ABOUT — remove dead vertical space and balance the card */
+  
   .dp-about{padding:94px 0 100px}
   .dp-about-grid{
     grid-template-columns:minmax(390px,.92fr) minmax(0,1.08fr);
@@ -235,7 +235,7 @@
     line-height:1.5;
   }
 
-  /* REQUEST — headings smaller, copy larger */
+  
   .dp-request{padding:94px 0 102px}
   .dp-request-grid article{
     min-height:245px;
@@ -255,7 +255,7 @@
     line-height:1.6;
   }
 
-  /* CONTACT / FORM — make it feel like a real primary conversion section */
+  
   .dp-contact{
     padding:96px 0 104px;
   }

@@ -2,74 +2,13 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
-const asset = (path: string) => `${basePath}${path}`;
+import { clinic, dentalServices, asset, type ServiceId } from './clinic-data';
+import { ClinicMark, DentalVisual, ToothIcon } from './dental-visual';
+import ConsultationForm from './consultation-form';
+import RequestGallery from './request-gallery';
+import HeroVisualRotator from './hero-visuals';
 
-type ServiceId = 'offline' | 'online';
-
-const services = {
-  offline: {
-    tab: 'Лечение зубов',
-    eyebrow: 'Здоровье зубов',
-    title: 'Лечение зубов',
-    summary: 'Начинаем с осмотра и диагностики, чтобы разобраться в причине жалоб и обсудить возможные варианты лечения.',
-    gives: [
-      'Осмотр и обсуждение того, что вас беспокоит.',
-      'Объяснение возможных вариантов лечения после диагностики.',
-      'Понятный план следующих шагов и ответы на вопросы.',
-    ],
-    fits: [
-      'Зубная боль или повышенная чувствительность.',
-      'Кариес и другие проблемы, требующие оценки стоматолога.',
-      'Плановый осмотр и необходимость второго мнения.',
-    ],
-    price: 'Уточняется',
-    duration: 'Индивидуально',
-    image: '/dimavhalate.webp',
-  },
-  online: {
-    tab: 'Эстетика улыбки',
-    eyebrow: 'Внешний вид зубов',
-    title: 'Эстетика улыбки',
-    summary: 'Обсудите, что хотели бы изменить в улыбке. Подходящие методы определяются после осмотра и оценки состояния зубов.',
-    gives: [
-      'Обсуждение ваших пожеланий и ожиданий.',
-      'Оценка состояния зубов и возможных ограничений.',
-      'Подбор дальнейших шагов и разъяснение вариантов.',
-    ],
-    fits: [
-      'Вопросы о цвете или форме зубов.',
-      'Сколы, заметные дефекты и другие эстетические запросы.',
-      'Желание узнать о возможностях восстановления улыбки.',
-    ],
-    price: 'Уточняется',
-    duration: 'Индивидуально',
-    image: '/dimaonline.webp',
-  },
-} as const;
-
-const visitReasons = [
-  {
-    number: '01',
-    title: 'Болит зуб',
-    text: 'Боль, чувствительность или дискомфорт при жевании — повод для осмотра. Стоматолог выяснит причину и объяснит, какое лечение может потребоваться.',
-  },
-  {
-    number: '02',
-    title: 'Хочется красивую улыбку',
-    text: 'Если беспокоят цвет, форма зубов или сколы, можно обсудить эстетические варианты. Решение подбирается с учётом состояния зубов и ваших пожеланий.',
-  },
-  {
-    number: '03',
-    title: 'Не хватает зуба',
-    text: 'Врач оценит состояние полости рта и расскажет о возможных способах восстановления. Подходящий вариант определяется после диагностики.',
-  },
-  {
-    number: '04',
-    title: 'Нужна профилактика',
-    text: 'Плановый осмотр помогает вовремя заметить проблемы, а консультация по гигиене — понять, как правильно ухаживать за зубами дома.',
-  },
-] as const;
+const services = Object.fromEntries(dentalServices.map((service) => [service.id, service])) as Record<ServiceId, typeof dentalServices[number]>;
 
 function CalendarIcon() {
   return (
@@ -108,19 +47,7 @@ function PinIcon() {
 }
 
 function ServiceIcon({ type }: { type: ServiceId }) {
-  if (type === 'online') {
-    return (
-      <svg viewBox="0 0 42 42" aria-hidden="true">
-        <path d="M21 5c-4-3-13-1-13 7 0 4 3 7 4 13 1 7 4 12 7 2l2-6 2 6c3 10 6 5 7-2 1-6 4-9 4-13 0-8-9-10-13-7Z" />
-        <path d="M34 4v8M30 8h8" />
-      </svg>
-    );
-  }
-  return (
-    <svg viewBox="0 0 42 42" aria-hidden="true">
-      <path d="M21 5c-4-3-13-1-13 7 0 4 3 7 4 13 1 7 4 12 7 2l2-6 2 6c3 10 6 5 7-2 1-6 4-9 4-13 0-8-9-10-13-7Z" />
-    </svg>
-  );
+  return <ToothIcon shine={type === 'aesthetics'} />;
 }
 
 function BookIcon() {
@@ -153,10 +80,11 @@ function UnionIcon() {
 
 export default function MobileV2() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeService, setActiveService] = useState<ServiceId>('offline');
+  const [activeService, setActiveService] = useState<ServiceId>('treatment');
   const [stickyVisible, setStickyVisible] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
-  const requestRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLElement>(null);
+  const [request, setRequest] = useState('Консультация стоматолога');
   const service = services[activeService];
 
   useEffect(() => {
@@ -167,38 +95,40 @@ export default function MobileV2() {
     document.querySelectorAll('.mobile-v2 [data-m2-reveal]').forEach((node) => revealObserver.observe(node));
 
     let heroVisible = true;
-    let requestVisible = false;
-    const syncSticky = () => setStickyVisible(!heroVisible && !requestVisible);
+    let formVisible = false;
+    const syncSticky = () => setStickyVisible(!heroVisible && !formVisible);
 
     const heroObserver = new IntersectionObserver(([entry]) => {
       heroVisible = entry.isIntersecting;
       syncSticky();
     }, { threshold: 0.03 });
 
-    const requestObserver = new IntersectionObserver(([entry]) => {
-      requestVisible = entry.isIntersecting;
+    const formObserver = new IntersectionObserver(([entry]) => {
+      formVisible = entry.isIntersecting;
       syncSticky();
     }, { threshold: 0.08 });
 
     if (heroRef.current) heroObserver.observe(heroRef.current);
-    if (requestRef.current) requestObserver.observe(requestRef.current);
+    if (formRef.current) formObserver.observe(formRef.current);
 
     return () => {
       revealObserver.disconnect();
       heroObserver.disconnect();
-      requestObserver.disconnect();
+      formObserver.disconnect();
     };
   }, []);
 
   const goTo = (id: string) => {
     setMenuOpen(false);
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById(id)?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
   };
 
   const goToForm = (serviceId?: ServiceId) => {
-    if (serviceId) setActiveService(serviceId);
+    if (serviceId) { setActiveService(serviceId); setRequest(services[serviceId].title); }
     goTo('m2-contact-form');
   };
+
+  const goToConsultation = (label: string) => { setRequest(label); goTo('m2-contact-form'); };
 
   return (
     <main className="mobile-v2">
@@ -206,12 +136,12 @@ export default function MobileV2() {
         <div className="m2-topbar">
           <button className="m2-identity" type="button" onClick={() => goTo('m2-about')} aria-label="Перейти к разделу о клинике">
             <span className="m2-avatar">
-              <img src={asset('/dmitriyaglav.webp')} alt="Временное изображение для сайта клиники" />
-              <i className="m2-online-dot" />
+              <ClinicMark />
+              
             </span>
             <span className="m2-identity-copy">
-              <strong>Стоматологическая клиника</strong>
-              <small>Диагностика и лечение зубов</small>
+              <strong>{clinic.name}</strong>
+              <small>{clinic.specialty}</small>
             </span>
           </button>
 
@@ -219,28 +149,28 @@ export default function MobileV2() {
             <button className="m2-form-icon" type="button" onClick={() => goToForm()} aria-label="Перейти к форме записи">
               <CalendarIcon />
             </button>
-            <button className="m2-menu-button" type="button" onClick={() => setMenuOpen((value) => !value)} aria-label="Открыть меню">
+            <button className="m2-menu-button" type="button" onClick={() => setMenuOpen((value) => !value)} aria-label={menuOpen ? "Закрыть меню" : "Открыть меню"} aria-expanded={menuOpen}>
               <MenuIcon open={menuOpen} />
             </button>
           </div>
         </div>
 
         <div className="m2-hero-body">
-          <p className="m2-location" data-m2-reveal><span>●</span> Приём по предварительной записи</p>
+          <p className="m2-location" data-m2-reveal>{clinic.city} · {clinic.district}</p>
 
           <div className="m2-proof" data-m2-reveal>
-            <strong>Здоровье <span>зубов</span></strong>
+            <strong>10:00–21:00 <span>ежедневно</span></strong>
             <i />
-            <strong>Эстетика <span>улыбки</span></strong>
+            <strong>Для взрослых</strong>
           </div>
 
           <div className="m2-name-block" data-m2-reveal>
             <span className="m2-name-label">Стоматологическая клиника</span>
-            <h1><span>Стоматология</span><em>для вашей улыбки</em></h1>
-            <p>Лечение и здоровье зубов начинаются с внимательного осмотра. Понятно объясняем возможности стоматологии и каждый следующий шаг.</p>
+            <h1><span>{clinic.name}</span><em>Стоматологическая клиника</em></h1>
+            <p>Лечение зубов, профессиональная гигиена и восстановление улыбки в Северном Бутове. Начните с консультации и узнайте подходящие варианты.</p>
           </div>
 
-          <div className="m2-hero-space" />
+          <div className="m2-hero-space"><HeroVisualRotator /></div>
 
           <div className="m2-hero-bottom" data-m2-reveal>
             <div className="m2-specialty-line">
@@ -248,7 +178,7 @@ export default function MobileV2() {
               <i />
               <div><small>Формат</small><strong>Приём по записи</strong></div>
             </div>
-            <button className="m2-button m2-primary" type="button" onClick={() => goToForm('offline')}>Записаться на приём <span>↗</span></button>
+            <button className="m2-button m2-primary" type="button" onClick={() => goToForm('treatment')}>{clinic.consultationCta} <span aria-hidden="true">↗</span></button>
             <button className="m2-button m2-outline m2-online-cta" type="button" onClick={() => goTo('m2-services')}>Посмотреть услуги <span>↗</span></button>
           </div>
         </div>
@@ -257,16 +187,16 @@ export default function MobileV2() {
       <div className={`m2-sticky${stickyVisible ? ' is-visible' : ''}`}>
         <button className="m2-identity m2-sticky-identity" type="button" onClick={() => goTo('m2-top')}>
           <span className="m2-avatar m2-avatar-small">
-            <img src={asset('/dmitriyaglav.webp')} alt="" />
-            <i className="m2-online-dot" />
+            <ClinicMark />
+            
           </span>
           <span className="m2-identity-copy">
-            <strong>Стоматологическая клиника</strong>
-            <small>Диагностика и лечение зубов</small>
+            <strong>{clinic.name}</strong>
+            <small>{clinic.specialty}</small>
           </span>
         </button>
-        <button className="m2-sticky-book" type="button" onClick={() => goToForm()}>Запись</button>
-        <button className="m2-menu-button m2-menu-sticky" type="button" onClick={() => setMenuOpen((value) => !value)} aria-label="Открыть меню">
+        <button className="m2-sticky-book" type="button" onClick={() => goToForm()}>Консультация</button>
+        <button className="m2-menu-button m2-menu-sticky" type="button" onClick={() => setMenuOpen((value) => !value)} aria-label={menuOpen ? "Закрыть меню" : "Открыть меню"} aria-expanded={menuOpen}>
           <MenuIcon open={menuOpen} />
         </button>
       </div>
@@ -275,32 +205,33 @@ export default function MobileV2() {
         <nav className="m2-menu-panel" aria-label="Навигация">
           <button type="button" onClick={() => goTo('m2-services')}><span>01</span> Услуги</button>
           <button type="button" onClick={() => goTo('m2-about')}><span>02</span> О клинике</button>
-          <button type="button" onClick={() => goTo('m2-contact-form')}><span>03</span> Форма обращения</button>
+          <button type="button" onClick={() => goTo('m2-request')}><span>03</span> С чем обратиться</button>
+          <button type="button" onClick={() => goTo('m2-contact-form')}><span>04</span> Бесплатная консультация</button>
         </nav>
       )}
 
       <section className="m2-education" id="m2-education">
         <div className="m2-photo-blend" data-m2-reveal>
-          <img src={asset('/dimadima.PNG')} alt="Временное изображение для стоматологического шаблона" />
+          <img src={asset('/assets/dental-care.webp')} alt="Стоматологическая иллюстрация" loading="lazy" decoding="async" />
         </div>
 
         <div className="m2-education-cards">
           <article className="m2-info-card m2-info-wide" data-m2-reveal>
             <span className="m2-info-icon"><BookIcon /></span>
             <div>
-              <small>Первый визит</small>
-              <h2>Осмотр и понятные объяснения — основа осознанного выбора стоматологического лечения.</h2>
+              <small>{clinic.name} · Москва</small>
+              <h2>Стоматологическая клиника для взрослых на бульваре Дмитрия Донского, 13.</h2>
             </div>
           </article>
 
           <div className="m2-info-grid">
             <article className="m2-info-card" data-m2-reveal>
               <span className="m2-info-icon"><PeopleIcon /></span>
-              <div><strong>Осмотр</strong><p>знакомство с ситуацией и вопросами пациента</p></div>
+              <div><strong>10:00–21:00</strong><p>работаем ежедневно</p></div>
             </article>
             <article className="m2-info-card" data-m2-reveal>
               <span className="m2-info-icon"><UnionIcon /></span>
-              <div><small className="m2-nowrap">После осмотра</small><strong>План</strong><p>разбор вариантов и дальнейших шагов</p></div>
+              <div><small>Северное Бутово</small><strong>Москва</strong><p>рядом с метро</p></div>
             </article>
           </div>
         </div>
@@ -309,7 +240,7 @@ export default function MobileV2() {
       <section className="m2-services" id="m2-services">
         <header className="m2-services-head" data-m2-reveal>
           <div className="m2-services-title">
-            <span className="m2-services-mark"><ServiceIcon type="offline" /></span>
+            <span className="m2-services-mark"><ServiceIcon type="treatment" /></span>
             <h2>Услуги</h2>
           </div>
           <p>Выберите направление, чтобы узнать, с какими вопросами можно обратиться в стоматологию.</p>
@@ -317,10 +248,10 @@ export default function MobileV2() {
 
         <div className="m2-service-tabs" data-m2-reveal>
           {(Object.keys(services) as ServiceId[]).map((id) => (
-            <button key={id} className={`m2-service-tab${activeService === id ? ' is-active' : ''}`} type="button" onClick={() => setActiveService(id)}>
+            <button key={id} className={`m2-service-tab${activeService === id ? ' is-active' : ''}`} type="button" onClick={() => setActiveService(id)} aria-pressed={activeService === id}>
               <span className="m2-service-icon"><ServiceIcon type={id} /></span>
               <small>{services[id].eyebrow}</small>
-              <strong>{services[id].tab}</strong>
+              <strong>{services[id].title}</strong>
             </button>
           ))}
         </div>
@@ -332,7 +263,7 @@ export default function MobileV2() {
 
           <div className="m2-detail-content">
             <section>
-              <h4>Что обсудим:</h4>
+              <h4>Направления работы:</h4>
               <ul>{service.gives.map((item) => <li key={item}>{item}</li>)}</ul>
             </section>
             <section>
@@ -342,15 +273,15 @@ export default function MobileV2() {
           </div>
 
           <div className="m2-service-meta">
-            <div><small>Стоимость</small><strong>{service.price}</strong></div>
+            <div><small>Стоимость</small><strong><a href={clinic.phoneHref}>Уточнить по телефону</a></strong></div>
             <i />
-            <div><small>План приёма</small><strong>{service.duration}</strong></div>
+            <div><small>Приём</small><strong>По записи</strong></div>
           </div>
 
-          <button className="m2-button m2-primary" type="button" onClick={() => goToForm(activeService)}>Записаться на приём <span>↗</span></button>
+          <button className="m2-button m2-primary" type="button" onClick={() => goToForm(activeService)}>{clinic.consultationCta} <span aria-hidden="true">↗</span></button>
 
           <div className="m2-service-photo">
-            <img src={asset(service.image)} alt={`Временное изображение для раздела «${service.title}»`} />
+            <DentalVisual art={service.art} />
           </div>
         </article>
       </section>
@@ -361,82 +292,53 @@ export default function MobileV2() {
           <h2>О клинике</h2>
         </header>
 
-        <p className="m2-about-lead" data-m2-reveal>Стоматология — это не только лечение зубов, но и понятный путь от первого вопроса до выбора подходящего решения. Осмотр помогает определить состояние зубов, обсудить варианты и спланировать дальнейшие действия.</p>
+        <p className="m2-about-lead" data-m2-reveal>{clinic.about}</p>
 
         <div className="m2-achievements" data-m2-reveal>
-          <div><strong>01</strong><span>Осмотр</span></div>
-          <div><strong>02</strong><span>Обсуждение</span></div>
-          <div><strong>03</strong><span>План</span></div>
+          <div><strong>Москва</strong><span>Северное Бутово</span></div>
+          <div><strong>8</strong><span>направлений</span></div>
+          <div><strong>10–21</strong><span>ежедневно</span></div>
         </div>
 
         <div className="m2-about-photo" data-m2-reveal>
-          <img src={asset('/dimaosebe.webp')} alt="Временное изображение для раздела о клинике" />
+          <DentalVisual art={3} />
         </div>
 
-        <div className="m2-request" data-m2-reveal ref={requestRef}>
-          <span>С чем к нам обращаются</span>
-          <h3>Начните с вопроса, который беспокоит именно вас.</h3>
-          <div className="m2-request-scroll" aria-label="Популярные обращения">
-            {visitReasons.map((reason) => <b key={reason.number}>{reason.title}</b>)}
-          </div>
-          <div className="m2-request-explanations">
-            {visitReasons.map((reason) => (
-              <article className="m2-request-explanation" key={reason.number}>
-                <div className="m2-request-explanation-head">
-                  <span>{reason.number}</span>
-                  <h4>{reason.title}</h4>
-                </div>
-                <p>{reason.text}</p>
-              </article>
-            ))}
-          </div>
-          <p>Необязательно знать название процедуры заранее. На консультации можно описать свой запрос, а врач определит необходимые обследования и варианты дальнейших действий.</p>
+        <div className="m2-request" id="m2-request" data-m2-reveal>
+          <span>С чем к нам обращаться</span>
+          <h3>Начните с вопроса, который беспокоит вас.</h3>
+          <RequestGallery variant="mobile" onConsultation={goToConsultation} />
+          <p>Откройте карточку, чтобы узнать, с чего начинается решение вашего вопроса.</p>
         </div>
 
         <div className="m2-contact-card" data-m2-reveal>
           <div className="m2-contact-identity">
             <span className="m2-avatar m2-contact-avatar">
-              <img src={asset('/dmitriyaglav.webp')} alt="Стоматологическая клиника" />
-              <i className="m2-online-dot" />
+              <ClinicMark />
+              
             </span>
-            <span><strong>Стоматологическая клиника</strong><small>Контакты для записи появятся здесь</small></span>
+            <span><strong>{clinic.name}</strong><small>{clinic.hours}</small></span>
           </div>
 
-          <div className="m2-contact-links" aria-label="Контакты стоматологической клиники">
-            <span className="m2-contact-link m2-contact-telegram"><i><PhoneIcon /></i><b>Телефон</b></span>
-            <span className="m2-contact-link"><i className="m2-i-mark">i</i><b>Уточняется</b></span>
-            <span className="m2-contact-link"><i><PinIcon /></i><b>Адрес уточняется</b></span>
+          <p className="clinic-mobile-address">{clinic.fullAddress}</p>
+          <a className="clinic-mobile-phone" href={clinic.phoneHref}>{clinic.phone}</a>
+          <div className="m2-contact-links" aria-label="Контакты клиники">
+            <a className="m2-contact-link" href={clinic.phoneHref}><i><PhoneIcon /></i><b>Позвонить</b></a>
+            <a className="m2-contact-link" href={'mailto:' + clinic.email}><b>Написать</b></a>
+            <a className="m2-contact-link" href={clinic.mapUrl} target="_blank" rel="noopener noreferrer"><i><PinIcon /></i><b>На карте</b></a>
           </div>
         </div>
       </section>
 
-      <section className="m2-form-section" id="m2-contact-form">
+      <section className="m2-form-section" id="m2-contact-form" ref={formRef}>
         <div className="m2-form-head" data-m2-reveal>
-          <span>Форма обращения</span>
-          <h2>Оставьте заявку</h2>
-          <p>Укажите контакты для записи. Администратор сможет связаться с вами после подключения формы к клинике.</p>
+          <span>Свяжитесь с клиникой</span>
+          <h2>{clinic.consultationCta}</h2>
+          <p>Уточните услуги и порядок записи. Оставьте контакты, чтобы клиника могла ответить на ваше обращение.</p>
         </div>
-
-        <form className="m2-form" data-m2-reveal onSubmit={(event) => event.preventDefault()}>
-          <input type="hidden" name="department" value="Стоматология" readOnly />
-          <input type="hidden" name="source" value="dentistry-mobile-demo" readOnly />
-          <input type="hidden" name="service" value={activeService} readOnly />
-
-          <label>
-            <span>ФИО</span>
-            <input name="fullName" type="text" autoComplete="name" placeholder="Иван Иванов" required />
-          </label>
-          <label>
-            <span>Телефон</span>
-            <input name="phone" type="tel" autoComplete="tel" inputMode="tel" placeholder="+7 999 000-00-00" required />
-          </label>
-          <label>
-            <span>Комментарий <small>необязательно</small></span>
-            <textarea name="comment" rows={4} placeholder="При желании укажите удобное время для звонка" />
-          </label>
-          <button type="submit">Оставить заявку <span>↗</span></button>
-          <p className="m2-form-demo-note">Демонстрационная форма: отправка заявок пока не подключена.</p>
-        </form>
+        <ConsultationForm variant="mobile" request={request} />
+        <p className="clinic-medical-note">Осмотр, обследования и лечение оплачиваются по прайсу клиники. Информация на сайте не заменяет приём врача.</p>
+        <p className="clinic-powered">Цифровой офис · TANEM</p>
       </section>
     </main>
   );

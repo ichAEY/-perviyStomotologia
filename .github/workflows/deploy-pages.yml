@@ -30,10 +30,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Build static site
-        run: |
-          # The imported source remains unchanged in git; rewrite only the CI workspace path.
-          sed -i 's#/-dm_rihalsky#/-perviyStomotologia#g' next.config.ts package.json
-          npm run build:pages
+        run: npm run build:pages
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -46,8 +43,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Let branch Pages deployment finish
-        run: sleep 30
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

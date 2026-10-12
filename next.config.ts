@@ -1,7 +1,7 @@
 import type { NextConfig } from 'next';
 
 const isGitHubPages = process.env.GITHUB_PAGES === 'true';
-const githubPagesBasePath = '/-dm_rihalsky';
+const githubPagesBasePath = '/-perviyStomotologia';
 
 const nextConfig: NextConfig = {
   output: isGitHubPages ? 'export' : undefined,

@@ -1,19 +1,19 @@
 @media (max-width:767px){
-  /* Final pass: preserve the previous visual language and only adjust requested details. */
+  
   .m2-location{display:none!important}
 
   .m2-hero-body{padding-top:3px}
   .m2-proof{margin-top:4px}
   .m2-name-block{margin-top:18px}
 
-  /* Restore the quieter typography from the earlier successful version. */
+  
   .m2-button{font-size:11px;font-weight:650;letter-spacing:-.01em;line-height:1}
   .m2-sticky-book{font-size:8.7px;font-weight:680;letter-spacing:0;line-height:1}
 
-  /* Make 1600+ visually equal to СРР. */
+  
   .m2-info-grid article:first-child strong{font-size:18px}
 
-  /* Blend dimadima into the neighbouring sections at both edges. */
+  
   .m2-photo-blend{background:#edf3f7}
   .m2-photo-blend img{
     -webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 8%,#000 91%,transparent 100%);
@@ -26,7 +26,7 @@
   .m2-photo-blend:before{top:0;background:linear-gradient(to bottom,#edf3f7,rgba(237,243,247,0))}
   .m2-photo-blend:after{bottom:0;background:linear-gradient(to top,#edf3f7,rgba(237,243,247,0))}
 
-  /* Services heading: keep the word centered and move the illustration a few pixels away. */
+  
   .m2-services{padding-top:46px}
   .m2-services-head{position:relative;text-align:center}
   .m2-services-title{position:relative;display:grid;min-height:43px;place-items:center}
@@ -35,15 +35,15 @@
   .m2-services-head p{margin-top:10px}
   .m2-service-tabs{margin-top:18px}
 
-  /* Choice cards keep their structure; only preserve the comfortable rhythm. */
+  
   .m2-service-tab{min-height:158px;padding:15px 14px 16px}
   .m2-service-tab small{margin-top:18px}
   .m2-service-tab strong{margin-top:9px;line-height:1.2}
 
-  /* In the expanded service card, add only a tiny gap between location and service title. */
+  
   .m2-service-detail h3{margin-top:8px}
 
-  /* Service body rhythm and smoother switch animation. */
+  
   .m2-service-detail{animation:m2FinalDetail .48s cubic-bezier(.2,.76,.2,1) both;will-change:opacity,transform}
   @keyframes m2FinalDetail{
     0%{opacity:0;transform:translateY(10px) scale(.996);filter:blur(1.5px)}
@@ -67,14 +67,14 @@
   .m2-detail-content{margin-top:19px}
   .m2-detail-content section+section{padding-top:16px}
 
-  /* Center About in the same visual manner as Services and give the illustration proper air. */
+  
   .m2-about{padding-top:52px}
   .m2-about-head{position:relative;display:grid;min-height:45px;place-items:center}
   .m2-about-head h2{width:100%;text-align:center}
   .m2-about-mark{position:absolute;left:calc(50% - 103px);top:50%;transform:translateY(-50%)}
   .m2-about-lead{margin-top:16px}
 
-  /* Request title and continuous marquee. */
+  
   .m2-request>span{font-size:13.5px;font-weight:650}
   .m2-request>span:after{content:""}
   .m2-request-scroll{display:block;margin:17px -15px 0;padding:0;overflow:hidden;white-space:nowrap}
@@ -85,7 +85,7 @@
   .m2-request-group b{flex:0 0 auto;padding:10px 11px;border:1px solid rgba(21,89,183,.12);border-radius:999px;background:#f3f7fc;color:#426484;font-size:8.3px;font-weight:560;white-space:nowrap}
   @keyframes m2RequestMarquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-  /* More deliberate scroll reveals without changing layout. */
+  
   .js .mobile-v2 .m2-info-wide[data-m2-reveal]{transform:translateY(24px) scale(.99);transition-duration:.78s}
   .js .mobile-v2 .m2-info-wide[data-m2-reveal].m2-visible{transform:none}
   .js .mobile-v2 .m2-info-grid article:first-child[data-m2-reveal]{transform:translateX(-22px);transition-duration:.74s}
@@ -118,7 +118,7 @@
   .js .mobile-v2 .m2-form[data-m2-reveal].m2-visible{transform:none}
 
 
-  /* Dentistry request explanations: preserve the existing animated topic rail. */
+  
   .m2-request-explanations{display:grid;gap:9px;margin-top:19px}
   .m2-request-explanation{
     position:relative;
@@ -137,7 +137,7 @@
   .m2-request-explanation p{margin:10px 0 0 42px;color:#5a6a78;font-size:11.2px;line-height:1.56}
   .m2-form-demo-note{margin:3px 2px 0;color:rgba(255,255,255,.57);font-size:10px;line-height:1.5}
 
-  /* Dark form card, still distinct from the surrounding dark section. */
+  
   .m2-form-section{padding-bottom:max(40px,calc(env(safe-area-inset-bottom) + 30px));background:linear-gradient(150deg,#252a30,#15181c)}
   .m2-form{
     border:1px solid rgba(255,255,255,.11);
@@ -160,7 +160,7 @@
   .m2-form button{background:#fff;color:#15181c}
   body.m2-dark-browser-chrome{background:#15181c!important}
 
-  /* Keep sticky mounted so both entrance and exit can animate reliably on iOS. */
+  
   .m2-sticky.m2-final-managed{
     display:grid!important;
     opacity:0!important;

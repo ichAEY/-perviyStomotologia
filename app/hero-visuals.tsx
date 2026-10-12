@@ -1,163 +1,94 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { DentalVisual } from './dental-visual';
+import type { DentalArt } from './clinic-data';
 
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
-const visuals = Array.from({ length: 8 }, (_, index) => `/kosti${String(index + 1).padStart(5, '0')}.webp`);
+const visuals: DentalArt[] = [0, 1, 2, 3];
 
 export default function HeroVisualRotator() {
+  const stage = useRef<HTMLDivElement>(null);
+  const track = useRef<HTMLDivElement>(null);
+  const firstGroup = useRef<HTMLDivElement>(null);
+  const offset = useRef(0);
+  const drag = useRef({ pointer: -1, x: 0, y: 0, offset: 0, horizontal: false });
+  const [paused, setPaused] = useState(false);
+
   useEffect(() => {
-    const space = document.querySelector<HTMLElement>('.m2-hero-space');
-    if (!space || space.dataset.heroVisualsReady === 'true') return;
-
-    space.dataset.heroVisualsReady = 'true';
-
-    const stage = document.createElement('div');
-    stage.className = 'm2-xray-ribbon';
-    stage.setAttribute('aria-hidden', 'true');
-
-    const track = document.createElement('div');
-    track.className = 'm2-xray-track';
-    stage.appendChild(track);
-
-    const makeGroup = () => {
-      const group = document.createElement('div');
-      group.className = 'm2-xray-group';
-
-      visuals.forEach((src) => {
-        const image = document.createElement('img');
-        image.src = `${basePath}${src}`;
-        image.alt = '';
-        image.decoding = 'async';
-        image.loading = 'eager';
-        image.draggable = false;
-        group.appendChild(image);
-      });
-
-      return group;
-    };
-
-    track.appendChild(makeGroup());
-    track.appendChild(makeGroup());
-    track.appendChild(makeGroup());
-    space.appendChild(stage);
-
-    let groupWidth = 0;
-    let offset = 0;
-    let lastFrame = performance.now();
-    let animationFrame = 0;
-    let dragging = false;
-    let dragStartX = 0;
-    let dragStartY = 0;
-    let dragStartOffset = 0;
-    let horizontalDrag = false;
-    let pauseUntil = 0;
-
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const speed = 14;
-
-    const normalize = () => {
-      if (!groupWidth) return;
-      while (offset <= -2 * groupWidth) offset += groupWidth;
-      while (offset > -groupWidth) offset -= groupWidth;
-    };
-
-    const paint = () => {
-      track.style.transform = `translate3d(${offset}px,0,0)`;
-    };
-
+    const element = stage.current;
+    const ribbon = track.current;
+    const group = firstGroup.current;
+    if (!element || !ribbon || !group) return;
+    let width = 0;
+    let frame = 0;
+    let inView = false;
+    let last = 0;
+    const mobile = window.matchMedia('(max-width: 767px)');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const paint = () => { ribbon.style.transform = 'translate3d(' + offset.current + 'px,0,0)'; };
     const measure = () => {
-      const firstGroup = track.firstElementChild as HTMLElement | null;
-      if (!firstGroup) return;
-      const nextWidth = firstGroup.getBoundingClientRect().width;
-      if (!nextWidth) return;
-
-      if (!groupWidth) {
-        groupWidth = nextWidth;
-        offset = -groupWidth;
-      } else {
-        const progress = (offset + groupWidth) / groupWidth;
-        groupWidth = nextWidth;
-        offset = -groupWidth + progress * groupWidth;
-        normalize();
-      }
+      const next = group.getBoundingClientRect().width;
+      if (!next) return;
+      if (!width) offset.current = -next;
+      width = next;
       paint();
     };
-
-    const frame = (now: number) => {
-      const delta = Math.min(50, now - lastFrame);
-      lastFrame = now;
-
-      if (!dragging && !reducedMotion && now >= pauseUntil && groupWidth) {
-        offset -= speed * (delta / 1000);
-        normalize();
+    const animate = (now: number) => {
+      const delta = Math.min(50, now - last);
+      last = now;
+      if (drag.current.pointer < 0 && width) {
+        offset.current -= 14 * delta / 1000;
+        while (offset.current <= -2 * width) offset.current += width;
+        while (offset.current > -width) offset.current -= width;
         paint();
       }
-
-      animationFrame = requestAnimationFrame(frame);
+      frame = window.requestAnimationFrame(animate);
     };
-
-    const onPointerDown = (event: PointerEvent) => {
-      dragging = true;
-      horizontalDrag = false;
-      dragStartX = event.clientX;
-      dragStartY = event.clientY;
-      dragStartOffset = offset;
-      pauseUntil = Number.POSITIVE_INFINITY;
-      stage.classList.add('is-dragging');
-      stage.setPointerCapture?.(event.pointerId);
-    };
-
-    const onPointerMove = (event: PointerEvent) => {
-      if (!dragging) return;
-
-      const dx = event.clientX - dragStartX;
-      const dy = event.clientY - dragStartY;
-
-      if (!horizontalDrag && Math.abs(dx) > 4) {
-        if (Math.abs(dx) <= Math.abs(dy)) return;
-        horizontalDrag = true;
+    const sync = () => {
+      window.cancelAnimationFrame(frame);
+      if (mobile.matches && inView && !paused && !reducedMotion.matches && !document.hidden && width) {
+        last = performance.now();
+        frame = window.requestAnimationFrame(animate);
       }
-
-      if (!horizontalDrag) return;
-
-      event.preventDefault();
-      offset = dragStartOffset + dx;
-      normalize();
-      paint();
     };
-
-    const finishDrag = (event: PointerEvent) => {
-      if (!dragging) return;
-      dragging = false;
-      horizontalDrag = false;
-      pauseUntil = performance.now() + 500;
-      stage.classList.remove('is-dragging');
-      if (stage.hasPointerCapture?.(event.pointerId)) stage.releasePointerCapture?.(event.pointerId);
-    };
-
-    const resizeObserver = new ResizeObserver(measure);
-    resizeObserver.observe(stage);
-
-    stage.addEventListener('pointerdown', onPointerDown);
-    stage.addEventListener('pointermove', onPointerMove);
-    stage.addEventListener('pointerup', finishDrag);
-    stage.addEventListener('pointercancel', finishDrag);
-
-    requestAnimationFrame(measure);
-    animationFrame = requestAnimationFrame(frame);
-
+    const resize = new ResizeObserver(() => { measure(); sync(); });
+    resize.observe(element);
+    const observer = new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; measure(); sync(); });
+    observer.observe(element);
+    mobile.addEventListener('change', sync);
+    reducedMotion.addEventListener('change', sync);
+    document.addEventListener('visibilitychange', sync);
     return () => {
-      cancelAnimationFrame(animationFrame);
-      resizeObserver.disconnect();
-      stage.removeEventListener('pointerdown', onPointerDown);
-      stage.removeEventListener('pointermove', onPointerMove);
-      stage.removeEventListener('pointerup', finishDrag);
-      stage.removeEventListener('pointercancel', finishDrag);
-      stage.remove();
-      delete space.dataset.heroVisualsReady;
+      window.cancelAnimationFrame(frame);
+      resize.disconnect(); observer.disconnect();
+      mobile.removeEventListener('change', sync);
+      reducedMotion.removeEventListener('change', sync);
+      document.removeEventListener('visibilitychange', sync);
     };
-  }, []);
+  }, [paused]);
 
-  return null;
+  return <div className="m2-dental-visuals">
+    <div className="m2-dental-ribbon" ref={stage} aria-label="Стоматологические иллюстрации"
+      onPointerDown={(event) => { drag.current = { pointer: event.pointerId, x: event.clientX, y: event.clientY, offset: offset.current, horizontal: false }; }}
+      onPointerMove={(event) => {
+        const current = drag.current;
+        if (current.pointer !== event.pointerId) return;
+        const dx = event.clientX - current.x;
+        const dy = event.clientY - current.y;
+        if (!current.horizontal && Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) { current.horizontal = true; event.currentTarget.setPointerCapture(event.pointerId); }
+        if (!current.horizontal) return;
+        event.preventDefault();
+        offset.current = current.offset + dx;
+        if (track.current) track.current.style.transform = 'translate3d(' + offset.current + 'px,0,0)';
+      }}
+      onPointerUp={() => { drag.current.pointer = -1; }}
+      onPointerCancel={() => { drag.current.pointer = -1; }}>
+      <div className="m2-dental-track" ref={track} aria-hidden="true">
+        {[0, 1, 2].map((group) => <div className="m2-dental-group" key={group} ref={group === 0 ? firstGroup : undefined}>
+          {visuals.map((art) => <div className="m2-dental-tile" key={art}><DentalVisual art={art} /></div>)}
+        </div>)}
+      </div>
+    </div>
+    <button type="button" className="m2-ribbon-toggle" onClick={() => setPaused(!paused)} aria-pressed={paused}>{paused ? 'Продолжить анимацию' : 'Приостановить анимацию'}</button>
+  </div>;
 }
